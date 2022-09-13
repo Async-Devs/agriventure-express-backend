@@ -1,0 +1,30 @@
+{
+  "name": "agriventure-express-backend",
+  "version": "1.0.0",
+  "description": "An application with the functionality to record the crop types being farmed, estimated amounts, and the geographical location of the crop fields. Furthermore, the system provides an informative dashboard using recorded data, and a marketplace in which suppliers can sell their harvest to buyers online. The system provides a public API for getting collected data, therefore the data can use in AI-based forecasting methods.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Async-Devs/agriventure-express-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Async-Devs/agriventure-express-backend/issues"
+  },
+  "homepage": "https://github.com/Async-Devs/agriventure-express-backend#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "express-async-errors": "^3.1.1",
+    "nodemon": "^2.0.19",
+    "process": "^0.11.10"
+  }
+}
