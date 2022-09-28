@@ -13,6 +13,14 @@ router.get('/',async (req, res) => {
     res.send(userList);
 });
 
+router.get('/isExist/:id',async (req, res) => {
+    const user = await User.findById(req.params.id);
+    if(!user){
+        res.status(500).json({success: false});
+    }
+    res.send({success: true});
+});
+
 router.get('/getUserNames',async (req, res) => {
     const userList = await User.find().select("userName");
     if(!userList){
