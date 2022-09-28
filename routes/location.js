@@ -1,5 +1,6 @@
 const {Location} = require('../models/location');
 const express = require('express');
+const {model} = require("mongoose");
 const router = express.Router();
 
 router.get('/', async (req,res) =>{
@@ -23,3 +24,5 @@ router.post('/', async (req,res) =>{
     }
     res.send(location);
 } )
+
+module.exports = router;

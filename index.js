@@ -6,6 +6,10 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 
 const producerRouter = require('./routes/producer');
+const locationRouter = require('./routes/location');
+const cropTypeRouter = require('./routes/cropType');
+const userRouter = require('./routes/user');
+const buyerRouter = require('./routes/buyer');
 
 const express = require("express");
 
@@ -22,6 +26,10 @@ app.use(morgan('tiny'));
 
 //Routes
 app.use(`${api}/producers`, producerRouter);
+app.use(`${api}/locations`, locationRouter);
+app.use(`${api}/cropTypes`, cropTypeRouter);
+app.use(`${api}/users`,userRouter);
+app.use(`${api}/buyers`,buyerRouter);
 
 mongoose.connect(process.env.CONNECTION_STRING,{
       useNewUrlParser: true,
