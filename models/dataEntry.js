@@ -16,9 +16,9 @@ const dataEntrySchema = mongoose.Schema({
         ref: 'Location',
         required: true
     },
-    producer: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Producer'
+    cropAmount: {
+        type: String,
+        required: true
     }
 });
 
