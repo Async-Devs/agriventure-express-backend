@@ -51,22 +51,16 @@ router.post(`/`,async (req,res)=>{
 });
 
 router.put('/updateMyProfile',async (req,res)=>{
-    const location = await Location.findById(req.body.location);
-    if(!location){
-        return res.status(400).send('Invalid location '+ req.body.location);
-    }
     for(let i = 0; i < req.body.cropTypes.length; i++){
         const cropType = await CropType.findById(req.body.cropTypes[i]);
         if(!cropType){
-            return res.status(400).send('Invalid crop type '+ req.body.cropTypes[i]);
+            return res.status(400).send({success: false, message: 'Invalid crop type '+ req.body.cropTypes[i]});
         }
     }
 
     const producer = await Producer.findByIdAndUpdate(
         req.body.id,
         {
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
             email: req.body.email,
             telNum: req.body.telNum,
             address: req.body.address,
@@ -91,6 +85,25 @@ router.get('/getByUserId',async (req,res)=>{
     res.send({
         producer: producer,
         success: true
+    });
+});
+
+router.delete('/deleteById/:id', (req,res)=>{
+    Producer.findByIdAndRemove(req.params.id).then(producer => {
+        if(producer){
+            return res.status(200).json({
+                success: true,
+                message: 'the producer was deleted'
+            });
+        }else{
+            return res.status(404).json({
+                success: false, message: "producer not found"
+            });
+        }
+    }).catch(err => {
+        return res.status(400).json({
+            success: false, error: err
+        });
     });
 });
 
