@@ -4,7 +4,7 @@ const {User} = require("../models/user");
 const router = express.Router();
 
 router.get('/',async (req, res) => {
-    const buyerList = await Buyer.find().populate('login')
+    const buyerList = await Buyer.find().populate('login');
     if(!buyerList){
         res.status(500).json({success: false});
     }
@@ -56,5 +56,43 @@ router.post(`/`,async (req,res)=>{
     });
 
 });
+
+router.delete('/deleteById/:id', (req,res)=>{
+    Buyer.findByIdAndRemove(req.params.id).then(buyer => {
+        if(buyer){
+            return res.status(200).json({
+                success: true,
+                message: 'the buyer was deleted'
+            });
+        }else{
+            return res.status(404).json({
+                success: false, message: "buyer not found"
+            });
+        }
+    }).catch(err => {
+        return res.status(400).json({
+            success: false, error: err
+        });
+    });
+});
+
+router.put('/updateMyProfile',async (req,res)=>{
+    console.log(req.body.id);
+    const buyer = await Buyer.findByIdAndUpdate(
+        req.body.id,
+        {
+            email: req.body.email,
+            telNum: req.body.telNum,
+            address: req.body.address
+        },{new: true})
+    if(!buyer){
+        return res.status(404).send({message: 'The buyer can not be updated', success: false});
+    }
+    res.send({
+        success: true,
+        producer: buyer
+    });
+});
+
 
 module.exports = router;
