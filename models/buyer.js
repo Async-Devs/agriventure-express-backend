@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const producerSchema = mongoose.Schema({
+const buyerSchema = mongoose.Schema({
     firstName: {
         type: String,
         required: true
@@ -29,19 +29,7 @@ const producerSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
-    },
-    cropTypes: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'CropType',
-        required: true
-    }],
-    location: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Location',
-        required: true
     }
 });
 
-
-
-exports.Producer = mongoose.model('Producer',producerSchema);
+exports.Buyer = mongoose.model('Buyer', buyerSchema);
