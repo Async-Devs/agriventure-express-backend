@@ -6,7 +6,9 @@ const itemSchema = mongoose.Schema({
 		required: true
 	},
 	images : {
-		type: [String],
+		type: [{
+			src: String
+		}],
 		required: true
 	},
 	description: {
