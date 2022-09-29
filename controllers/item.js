@@ -7,7 +7,14 @@ class ItemController {
   	};
 	
 	static async getItemById(req, res){
-		const item = await Item.findById(req.params.id);
+		let item = null;
+		try {
+			item = await Item.findById(req.params.id);
+		}catch (e){
+			item = `NoItem`;
+		}
+		
+		console.log(item);
 		return res.send(item);
 	}
 }
