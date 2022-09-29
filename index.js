@@ -10,6 +10,7 @@ const locationRouter = require('./routes/location');
 const cropTypeRouter = require('./routes/cropType');
 const userRouter = require('./routes/user');
 const buyerRouter = require('./routes/buyer');
+const dataEntryRouter = require('./routes/dataEntry');
 
 const express = require("express");
 
@@ -30,6 +31,7 @@ app.use(`${api}/locations`, locationRouter);
 app.use(`${api}/cropTypes`, cropTypeRouter);
 app.use(`${api}/users`,userRouter);
 app.use(`${api}/buyers`,buyerRouter);
+app.use(`${api}/dataEntries`,dataEntryRouter);
 
 mongoose.connect(process.env.CONNECTION_STRING,{
       useNewUrlParser: true,
