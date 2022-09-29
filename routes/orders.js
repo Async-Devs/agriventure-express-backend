@@ -1,4 +1,4 @@
-// const { OrderController } = require("../controllers/order");
+const { OrderController } = require("../controllers/order");
 const express = require("express");
 const router = express();
 
