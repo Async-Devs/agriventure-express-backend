@@ -10,6 +10,8 @@ const locationRouter = require('./routes/location');
 const cropTypeRouter = require('./routes/cropType');
 const userRouter = require('./routes/user');
 const buyerRouter = require('./routes/buyer');
+const officerRouter = require('./routes/officer');
+const chatMessageRouter = require('./routes/chatMessage');
 
 const express = require("express");
 
@@ -30,6 +32,8 @@ app.use(`${api}/locations`, locationRouter);
 app.use(`${api}/cropTypes`, cropTypeRouter);
 app.use(`${api}/users`,userRouter);
 app.use(`${api}/buyers`,buyerRouter);
+app.use(`${api}/officer`,officerRouter);
+app.use(`${api}/chatMessage`,chatMessageRouter);
 
 mongoose.connect(process.env.CONNECTION_STRING,{
       useNewUrlParser: true,
