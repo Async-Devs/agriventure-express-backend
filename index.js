@@ -12,6 +12,7 @@ const userRouter = require('./routes/user');
 const buyerRouter = require('./routes/buyer');
 const officerRouter = require('./routes/officer');
 const chatMessageRouter = require('./routes/chatMessage');
+const itemRouter = require('./routes/items');
 
 const express = require("express");
 
@@ -25,7 +26,8 @@ app.options('*',cors());
 //middleware
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
-
+console.log(api);
+console.log(`${api}/items`);
 //Routes
 app.use(`${api}/producers`, producerRouter);
 app.use(`${api}/locations`, locationRouter);
@@ -34,6 +36,7 @@ app.use(`${api}/users`,userRouter);
 app.use(`${api}/buyers`,buyerRouter);
 app.use(`${api}/officer`,officerRouter);
 app.use(`${api}/chatMessage`,chatMessageRouter);
+app.use(`${api}/items`,itemRouter);
 
 mongoose.connect(process.env.CONNECTION_STRING,{
       useNewUrlParser: true,
