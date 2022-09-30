@@ -15,6 +15,11 @@ class ItemController {
 		}
 		return res.send(item);
 	}
+	
+	static async addItem(req, res){
+		console.log(req.body.data)
+	}
+	
 	static async setBidById(req, res){
 		const bid = req.body.data
 		// console.log(bid);
