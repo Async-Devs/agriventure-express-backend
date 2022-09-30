@@ -13,9 +13,23 @@ class ItemController {
 		}catch (e){
 			item = `NoItem`;
 		}
-		
-		console.log(item);
 		return res.send(item);
+	}
+	static async setBidById(req, res){
+		const bid = req.body.data
+		// console.log(bid);
+		// WIP: db Transaction start
+		
+		const currentItem = await Item.findById(bid.itemId);
+		
+		let bidding = {
+			time_stamp:"2022-09-29T18:25:43.511+00:00", // WIP: get current time from moment()
+			bidder_name: "User Auth Error: User Auth Work in Progress",
+			bid_amount: bid.bidValue
+		}
+		const updatedDoc = await Item.findByIdAndUpdate(bid.itemId, )
+		console.log(currentItem);
+		// WIP: db Transaction end
 	}
 }
 
