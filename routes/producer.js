@@ -1,8 +1,4 @@
-const {Producer} = require('../models/producer');
 const express = require('express');
-const {Location} = require("../models/location");
-const {User} = require("../models/user");
-const {CropType} = require("../models/cropType");
 const router = express.Router();
 const producerController = require('../controllers/producer');
 
