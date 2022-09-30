@@ -30,9 +30,9 @@ console.log(`${api}/items`);
 app.use(`${api}/producers`, producerRouter);
 app.use(`${api}/locations`, locationRouter);
 app.use(`${api}/cropTypes`, cropTypeRouter);
-app.use(`${api}/users`,userRouter);
-app.use(`${api}/buyers`,buyerRouter);
-app.use(`${api}/items`,itemRouter);
+app.use(`${api}/users`, userRouter);
+app.use(`${api}/buyers`, buyerRouter);
+app.use(`${api}/items`, itemRouter);
 
 mongoose.connect(process.env.CONNECTION_STRING,{
       useNewUrlParser: true,
