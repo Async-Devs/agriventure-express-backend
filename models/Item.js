@@ -6,7 +6,9 @@ const itemSchema = mongoose.Schema({
 		required: true
 	},
 	images : {
-		type: [String],
+		type: [{
+			src: String
+		}],
 		required: true
 	},
 	description: {
@@ -33,7 +35,7 @@ const itemSchema = mongoose.Schema({
 	bidding_array: {
 		type: [{
 			time_stamp: Date,
-			bidder_name: String, // Change this to Ref of Buyer later
+			bidder_name: String, // Change this to Ref of Buyer later: User Auth WIP
 			bid_amount: Number
 		}]
 	},

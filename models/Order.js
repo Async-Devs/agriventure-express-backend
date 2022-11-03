@@ -28,7 +28,10 @@ const orderSchema = mongoose.Schema({
     order_date_time: {
         type: mongoose.Schema.Types.Date,
         required: true
-    }
+    },
+    order_delivery_address: String,
+    order_delivery_city: String,
+    order_delivery_zipcode:String
 });
 
 exports.Order = mongoose.model('Order',orderSchema);
