@@ -1,7 +1,6 @@
 
-
 class Delivery {
 
 }
 
-module.exports.Delivery = Delivery;
+module.exports.Delivery = Delivery

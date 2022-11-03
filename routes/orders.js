@@ -1,6 +1,6 @@
-const { OrderController } = require("../controllers/order");
-const express = require("express");
-const router = express();
+const { OrderController } = require('../controllers/order')
+const express = require('express')
+const router = express()
 
 // router.get("/", OrderController.getAllOrders);
 // router.get("/year-period-of-sold", OrderController.getYearPeriodOfSold);
@@ -9,4 +9,4 @@ const router = express();
 // router.post("/checkout/payment", OrderController.confirmAndSetOrder);
 // router.put("/update", OrderController.updateOrderStatus);
 
-module.exports = router;
+module.exports = router
