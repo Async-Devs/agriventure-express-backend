@@ -1,7 +1,9 @@
-const { User } = require('../models/user')
-const { Producer } = require('../models/producer')
-const mongoose = require('mongoose')
-const { Buyer } = require('../models/buyer')
+const {User} = require("../models/user");
+const {Producer} = require("../models/producer");
+const mongoose = require("mongoose");
+const {Buyer} = require("../models/buyer");
+const bcrypt = require("bcrypt");
+const JWT = require('jsonwebtoken');
 
 const getAllUsers = async (req, res) => {
   const userList = await User.find()
@@ -73,30 +75,81 @@ const getUserById = async (req, res) => {
   )
 }
 
-const addUser = async (req, res) => {
-  let user = new User({
-    userName: req.body.userName,
-    password: req.body.password,
-    userType: req.body.userType,
-    isActive: req.body.isActive
-  })
+const addUser = async (req,res)=>{
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password,salt);
 
-  user = await user.save()
-  if (!user) {
-    return res.status(500).json({
-      success: false
-    })
-  }
-  res.send({
-    user,
-    success: true
-  })
+
+    let user = new User({
+        userName: req.body.userName,
+        password: hashedPassword,
+        userType: req.body.userType,
+        isActive: req.body.isActive
+    });
+
+    user = await user.save();
+    if(!user){
+        return res.status(500).json({
+            success: false
+        });
+    }
+    const accessToken = await JWT.sign(
+        {userName: user.userName,
+                userType: user.userType,
+                userId: user.id},
+                process.env.ACCESS_TOKEN_SECRET,
+        {expiresIn: "14400s"}
+    );
+    res.send({
+        user: user,
+        accessToken: accessToken,
+        success: true
+    });
+
 }
 
+const signIn = async (req,res) =>{
+    const user = await User.findOne({userName: req.body.userName});
+    if(!user){
+        return res.status(400).json({
+            success: false,
+            msg: "Invalid Username or password"
+        })
+    }
+
+    let isMatch = await bcrypt.compare(req.body.password,user.password);
+    if (!isMatch){
+        return res.status(401).json({
+            success: false,
+            msg: "Invalid Username or password"
+        });
+    }
+
+    const accessToken = await JWT.sign(
+        {userName: user.userName,
+            userType: user.userType,
+            userId: user.id},
+        process.env.ACCESS_TOKEN_SECRET,
+        {expiresIn: "14400s"}
+    );
+
+    res.json({
+        success: true,
+        accessToken: accessToken
+    })
+
+
+
+
+
+}
+
+
 module.exports = {
-  getAllUsers,
-  isExist,
-  getUserNames,
-  getUserById,
-  addUser
+    getAllUsers,
+    isExist,
+    getUserNames,
+    getUserById,
+    addUser,
+    signIn
 }
