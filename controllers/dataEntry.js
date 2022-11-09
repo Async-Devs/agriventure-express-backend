@@ -1,6 +1,5 @@
 const { DataEntry } = require('../models/dataEntry')
-const { Producer } = require('../models/producer')
-const { User } = require('../models/user')
+
 
 const getAllDataEntry = async (req, res) => {
   const dataList = await DataEntry.find()
