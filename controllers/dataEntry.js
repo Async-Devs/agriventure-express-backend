@@ -1,6 +1,5 @@
 const { DataEntry } = require('../models/dataEntry')
 
-
 const getAllDataEntry = async (req, res) => {
   const dataList = await DataEntry.find()
   if (!dataList) {
