@@ -43,6 +43,8 @@ app.use(`${api}/officer`, officerRouter)
 app.use(`${api}/chatMessage`, chatMessageRouter)
 app.use(`${api}/items`, itemRouter)
 app.use(`${api}/dataEntries`, dataRouter)
+app.use(`${api}/disricts`, districtRouter)
+app.use(`${api}/auth`, authRouter)
 
 mongoose.connect(process.env.CONNECTION_STRING, {
   useNewUrlParser: true,
