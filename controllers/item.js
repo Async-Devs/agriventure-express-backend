@@ -2,8 +2,10 @@ const { Item } = require('../models/Item')
 
 class ItemController {
   static async getAllItems (req, res) {
+    // eslint-disable-next-line no-mixed-spaces-and-tabs,no-tabs
 	  	const itemArray = await Item.find()
     return res.send(itemArray)
+    // eslint-disable-next-line no-mixed-spaces-and-tabs,no-tabs
   	};
 
   static async getItemById (req, res) {

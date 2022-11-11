@@ -5,17 +5,18 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const mongoose = require('mongoose')
 
-const producerRouter = require('./routes/producer');
-const locationRouter = require('./routes/location');
-const cropTypeRouter = require('./routes/cropType');
-const userRouter = require('./routes/user');
-const buyerRouter = require('./routes/buyer');
-const dataEntryRouter = require('./routes/dataEntry');
-const officerRouter = require('./routes/officer');
-const chatMessageRouter = require('./routes/chatMessage');
-const itemRouter = require('./routes/items');
-const dataRouter = require('./routes/dataEntry');
-const authRouter = require('./routes/auth');
+const producerRouter = require('./routes/producer')
+const locationRouter = require('./routes/location')
+const cropTypeRouter = require('./routes/cropType')
+const userRouter = require('./routes/user')
+const buyerRouter = require('./routes/buyer')
+const dataEntryRouter = require('./routes/dataEntry')
+const officerRouter = require('./routes/officer')
+const chatMessageRouter = require('./routes/chatMessage')
+const itemRouter = require('./routes/items')
+const dataRouter = require('./routes/dataEntry')
+const authRouter = require('./routes/auth')
+const districtRouter = require('./routes/districts')
 
 const express = require('express')
 
@@ -42,7 +43,6 @@ app.use(`${api}/officer`, officerRouter)
 app.use(`${api}/chatMessage`, chatMessageRouter)
 app.use(`${api}/items`, itemRouter)
 app.use(`${api}/dataEntries`, dataRouter)
-app.use(`${api}/auth`,authRouter);
 
 mongoose.connect(process.env.CONNECTION_STRING, {
   useNewUrlParser: true,
