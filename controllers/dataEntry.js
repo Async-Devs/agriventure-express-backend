@@ -10,10 +10,10 @@ const getAllDataEntry = async (req, res) => {
 
 const addDataEntry = async (req, res) => {
   let data = new DataEntry({
-    year: req.body.year,
-    cropType: req.body.cropType,
-    location: req.body.location,
-    cropAmount: req.body.cropAmount
+    year: req.body.data.year,
+    cropType: req.body.data.cropType,
+    location: req.body.data.location,
+    cropAmount: req.body.data.cropAmount
   })
 
   data = await data.save()

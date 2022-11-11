@@ -15,6 +15,7 @@ const officerRouter = require('./routes/officer')
 const chatMessageRouter = require('./routes/chatMessage')
 const itemRouter = require('./routes/items')
 const dataRouter = require('./routes/dataEntry')
+const districtRouter = require('./routes/districts')
 
 const express = require('express')
 
@@ -41,6 +42,7 @@ app.use(`${api}/officer`, officerRouter)
 app.use(`${api}/chatMessage`, chatMessageRouter)
 app.use(`${api}/items`, itemRouter)
 app.use(`${api}/dataEntries`, dataRouter)
+app.use(`${api}/districts`, districtRouter)
 
 mongoose.connect(process.env.CONNECTION_STRING, {
   useNewUrlParser: true,
