@@ -1,8 +1,4 @@
 const router = require("express").Router();
-const {check, validationResult} = require("express-validator");
-const bcrypt = require("bcrypt");
-const JWT = require('jsonwebtoken');
-const {users} = require("../models/user");
 const producerController = require('../controllers/producer');
 const buyerController = require('../controllers/buyer');
 const userController = require('../controllers/user')
