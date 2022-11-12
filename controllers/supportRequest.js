@@ -1,5 +1,8 @@
 const { SupportRequest } = require('../models/supportRequest')
 const { Producer } = require('../models/producer')
+const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
+const {Buyer} = require("../models/buyer");
 
 const getAllSupportRequests = async (req, res) => {
   const supportRequestList = await SupportRequest.find().populate('producerId')
@@ -23,32 +26,68 @@ const getSupportRequestById = async (req, res) => {
 }
 
 const addSupportRequest = async (req, res) => {
-  const producer = await Producer.findById(req.body.producerId)
-  if (!producer) {
-    return res.status(400).send('Invalid Producer')
-  }
+  try{
+    const userToken = await jwt.verify(req.header("x-auth-token"),process.env.ACCESS_TOKEN_SECRET);
+    const userId = userToken.userId;
 
-  let supportRequest = new SupportRequest({
-    producerId: req.body.producerId,
-    type: req.body.type,
-    description: req.body.description,
-    messages: req.body.messages
-  })
-
-  supportRequest = await supportRequest.save()
-  if (!supportRequest) {
-    return res.status(500).json({
-      success: false
+    let supportRequest = new SupportRequest({
+      producerId: userId,
+      type: req.body.type,
+      description: req.body.description,
+      subject: req.body.subject,
+      messages: []
     })
+
+    supportRequest = await supportRequest.save()
+    if (!supportRequest) {
+      return res.status(500).json({
+        success: false
+      })
+    }
+    res.send({
+      supportRequest,
+      success: true
+    })
+
+  }catch (error){
+    res.status(403).json({
+      success: false,
+      msg: "Invalid token"
+    });
   }
-  res.send({
-    supportRequest,
-    success: true
-  })
+
+}
+
+const getMySupportRequests = async (req,res) => {
+  console.log("routing done");
+  try{
+    const userToken = await jwt.verify(req.header("x-auth-token"),process.env.ACCESS_TOKEN_SECRET);
+    const userId = userToken.userId;
+
+    const supportRequests = await SupportRequest.find({producerId: mongoose.Types.ObjectId(userId)}).populate("producerId");
+
+    if(!supportRequests){{}
+      res.status(500).json({
+        success: false,
+        message: 'Support Requests not found'
+      })
+    }
+    res.send({
+      supportRequests,
+      success: true
+    });
+
+  }catch (error){
+    res.status(403).json({
+      success: false,
+      msg: "Invalid token"
+    });
+  }
 }
 
 module.exports = {
   getAllSupportRequests,
   getSupportRequestById,
-  addSupportRequest
+  addSupportRequest,
+  getMySupportRequests
 }

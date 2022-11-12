@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const {Buyer} = require("../models/buyer");
 const bcrypt = require("bcrypt");
 const JWT = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 const getAllUsers = async (req, res) => {
   const userList = await User.find()
@@ -75,6 +76,50 @@ const getUserById = async (req, res) => {
   )
 }
 
+const getMyProfile = async (req, res) => {
+    try{
+        const userToken = await jwt.verify(req.header("x-auth-token"),process.env.ACCESS_TOKEN_SECRET);
+        const userId = userToken.userId;
+        if (userToken.userType === 0) {
+            const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(userId) }).populate('location').populate('cropTypes').populate('login');
+            if (!producer) {
+                res.status(500).json({
+                    success: false,
+                    message: 'Producer not found'
+                })
+            }
+
+            res.send(
+                {
+                    user: producer,
+                    success: true
+                }
+            )
+        } else if (userToken.userType === 1) {
+            const buyer = await Buyer.findOne({ login: mongoose.Types.ObjectId(userId) }).populate('login')
+            if (!buyer) {
+                res.status(500).json({
+                    success: false,
+                    message: 'Buyer not found'
+                })
+            }
+            res.send(
+                {
+                    user: buyer,
+                    success: true
+                }
+            )
+        }
+
+    }catch (error){
+        res.status(403).json({
+            success: false,
+            msg: "Invalid token"
+        });
+    }
+
+}
+
 const addUser = async (req,res)=>{
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password,salt);
@@ -135,8 +180,10 @@ const signIn = async (req,res) =>{
 
     res.json({
         success: true,
-        accessToken: accessToken
-    })
+        accessToken: accessToken,
+        userId: user.id,
+        userType: user.userType
+    });
 
 
 
@@ -151,5 +198,6 @@ module.exports = {
     getUserNames,
     getUserById,
     addUser,
-    signIn
+    signIn,
+    getMyProfile
 }
