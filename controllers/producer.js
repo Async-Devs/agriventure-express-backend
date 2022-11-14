@@ -1,7 +1,6 @@
 const { Producer } = require('../models/producer')
 const { Location } = require('../models/location')
 const { User } = require('../models/user')
-const { CropType } = require('../models/cropType')
 
 const getAllProducers = async (req, res) => {
   const producerList = await Producer.find().populate('location').populate('login').populate('cropTypes')
@@ -30,7 +29,6 @@ const addNewProducer = async (req, res) => {
     address: req.body.address,
     telNum: req.body.telNum,
     login: req.body.login,
-    cropTypes: req.body.cropTypes,
     location: req.body.location
   })
 
@@ -47,20 +45,14 @@ const addNewProducer = async (req, res) => {
 }
 
 const updateMyProfile = async (req, res) => {
-  for (let i = 0; i < req.body.cropTypes.length; i++) {
-    const cropType = await CropType.findById(req.body.cropTypes[i])
-    if (!cropType) {
-      return res.status(400).send({ success: false, message: 'Invalid crop type ' + req.body.cropTypes[i] })
-    }
-  }
+
 
   const producer = await Producer.findByIdAndUpdate(
     req.body.id,
     {
       email: req.body.email,
       telNum: req.body.telNum,
-      address: req.body.address,
-      cropTypes: req.body.cropTypes
+      address: req.body.address
     }, { new: true })
   if (!producer) {
     return res.status(404).send({ message: 'The producer can not be updated', success: false })
