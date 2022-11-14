@@ -77,11 +77,12 @@ const getUserById = async (req, res) => {
 }
 
 const getMyProfile = async (req, res) => {
+    console.log("routing done");
     try{
         const userToken = await jwt.verify(req.header("x-auth-token"),process.env.ACCESS_TOKEN_SECRET);
         const userId = userToken.userId;
         if (userToken.userType === 0) {
-            const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(userId) }).populate('location').populate('cropTypes').populate('login');
+            const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(userId) }).populate('location').populate('login');
             if (!producer) {
                 res.status(500).json({
                     success: false,
@@ -112,6 +113,7 @@ const getMyProfile = async (req, res) => {
         }
 
     }catch (error){
+        console.log(error)
         res.status(403).json({
             success: false,
             msg: "Invalid token"
@@ -175,7 +177,7 @@ const signIn = async (req,res) =>{
             userType: user.userType,
             userId: user.id},
         process.env.ACCESS_TOKEN_SECRET,
-        {expiresIn: "14400s"}
+        {expiresIn: "240m"}
     );
 
     res.json({

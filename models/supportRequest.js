@@ -20,6 +20,11 @@ const supportRequestSchema = mongoose.Schema({
     required: true,
     default: Date.now()
   },
+  lastActiveDate: {
+    type: Date,
+    required: true,
+    default: Date.now()
+  },
   subject: {
     type: String,
     required: true
@@ -30,7 +35,7 @@ const supportRequestSchema = mongoose.Schema({
   },
   messages: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'ChatMessage'
+    ref: 'SupportRequestMessage'
   }]
 })
 

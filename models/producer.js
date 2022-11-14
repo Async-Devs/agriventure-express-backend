@@ -30,11 +30,6 @@ const producerSchema = mongoose.Schema({
     ref: 'User',
     required: true
   },
-  cropTypes: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'CropType',
-    required: true
-  }],
   location: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Location',

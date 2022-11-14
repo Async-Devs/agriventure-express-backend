@@ -1,8 +1,6 @@
 const { SupportRequest } = require('../models/supportRequest')
-const { Producer } = require('../models/producer')
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
-const {Buyer} = require("../models/buyer");
 
 const getAllSupportRequests = async (req, res) => {
   const supportRequestList = await SupportRequest.find().populate('producerId')
@@ -58,13 +56,27 @@ const addSupportRequest = async (req, res) => {
 
 }
 
+const updateSupportRequest = async (req,res) => {
+  const supportRequest = await SupportRequest.findByIdAndUpdate(req.body.id,
+      {
+        messages: req.body.messages
+      },{new: true});
+  if(!supportRequest){
+    return res.status(404).send({ message: 'The support request can not be updated', success: false })
+  }
+  res.send({
+    success: true,
+    supportRequest
+  })
+}
+
 const getMySupportRequests = async (req,res) => {
   console.log("routing done");
   try{
     const userToken = await jwt.verify(req.header("x-auth-token"),process.env.ACCESS_TOKEN_SECRET);
     const userId = userToken.userId;
 
-    const supportRequests = await SupportRequest.find({producerId: mongoose.Types.ObjectId(userId)}).populate("producerId");
+    const supportRequests = await SupportRequest.find({producerId: mongoose.Types.ObjectId(userId)}).populate("producerId").populate("messages").sort({lastActiveDate: -1});
 
     if(!supportRequests){{}
       res.status(500).json({
@@ -89,5 +101,6 @@ module.exports = {
   getAllSupportRequests,
   getSupportRequestById,
   addSupportRequest,
-  getMySupportRequests
+  getMySupportRequests,
+  updateSupportRequest
 }
