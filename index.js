@@ -17,12 +17,16 @@ const itemRouter = require('./routes/items')
 const dataRouter = require('./routes/dataEntry')
 const authRouter = require('./routes/auth')
 const districtRouter = require('./routes/districts')
+const orderRouter = require('./routes/orders')
 
 const express = require('express')
 
 const PORT = process.env.PORT || 3001
 const api = process.env.API_URL
 const app = express()
+// Socket.io
+const server = require('http').createServer(app)
+const io = require('socket.io')(server, {cors:{ origin: "*"}})
 
 app.use(cors())
 app.options('*', cors())
@@ -42,6 +46,7 @@ app.use(`${api}/dataEntries`, dataEntryRouter)
 app.use(`${api}/officer`, officerRouter)
 app.use(`${api}/chatMessage`, chatMessageRouter)
 app.use(`${api}/items`, itemRouter)
+app.use(`${api}/orders`, orderRouter)
 app.use(`${api}/dataEntries`, dataRouter)
 app.use(`${api}/disricts`, districtRouter)
 app.use(`${api}/auth`, authRouter)
@@ -57,6 +62,10 @@ mongoose.connect(process.env.CONNECTION_STRING, {
   console.log(err)
 })
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`)
 })
+
+io.on('connect', (socket) => {
+  console.log('a user connected of ID: ', socket.id);
+});

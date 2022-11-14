@@ -6,10 +6,20 @@ const orderSchema = mongoose.Schema({
     ref: 'Producer',
     required: true
   },
+  buyer: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Buyer',
+    required: true
+  },
   item: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Item',
     required: true
+  },
+  order_status: {
+    type: String,
+    required: true, // ACTIVE, COMPLETE, REMOVED
+    default: 'ACTIVE'
   },
   payment_status: {
     type: String,
@@ -32,6 +42,6 @@ const orderSchema = mongoose.Schema({
   order_delivery_address: String,
   order_delivery_city: String,
   order_delivery_zipcode: String
-})
+});
 
 exports.Order = mongoose.model('Order', orderSchema)
