@@ -3,12 +3,12 @@ const mongoose = require('mongoose')
 const orderSchema = mongoose.Schema({
   producer: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Producer',
+    ref: 'User',
     required: true
   },
   buyer: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Buyer',
+    ref: 'User',
     required: true
   },
   item: {

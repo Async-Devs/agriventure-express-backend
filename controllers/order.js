@@ -15,15 +15,25 @@ class OrderController {
 	
 	
 	static async getOrdersByBuyerId (req, res) {
-		console.log("get orders for buyer")
+		const buyerId = req.params.id;
+		console.log("get orders for buyer", buyerId);
+		const orderArray = await Order.find({buyer: buyerId}).populate("item").populate('buyer').populate('producer');
+		return res.send(orderArray);
 	};
 	
 	static async getOrdersByProducerId (req, res) {
-		console.log("get orders for Producer")
+		const producerId = req.params.id;
+		console.log("get orders for producer", producerId);
+		const orderArray = await Order.find({producer: producerId}).populate("item").populate('buyer').populate('producer');
+		return res.send(orderArray);
 	};
 	
 	static async getOrderById (req, res) {
-		console.log("get order")
+		const orderId = req.params.id;
+		console.log("get order Id - ",orderId);
+		const orderDetails = await Order.find({_id:orderId }).populate("item").populate('buyer').populate('producer');
+		console.log("get order - ", orderDetails);
+		return res.send(orderDetails);
 	};
 	
 }
