@@ -1,8 +1,8 @@
-const router = require("express").Router();
-const userController = require('../controllers/user');
+const router = require('express').Router()
+const userController = require('../controllers/user')
 
-router.get("/myProfile",userController.getMyProfile);
+router.get('/myProfile', userController.getMyProfile)
 
-router.put("/updateMyProfile",userController.editMyProfile);
+router.put('/updateMyProfile', userController.editMyProfile)
 
-module.exports = router;
+module.exports = router

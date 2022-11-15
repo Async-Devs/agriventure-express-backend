@@ -1,7 +1,7 @@
 const { RefundRequest } = require('../models/refundRequest')
 const { Order } = require('../models/Order')
-const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
+const jwt = require('jsonwebtoken')
+const mongoose = require('mongoose')
 
 const getAllRefundRequests = async (req, res) => {
   const refundRequestList = await RefundRequest.find().populate('orderId')
@@ -25,25 +25,24 @@ const getRefundRequestById = async (req, res) => {
 }
 
 const addRefundRequest = async (req, res) => {
-  try{
-    const userToken = await jwt.verify(req.header("x-auth-token"),process.env.ACCESS_TOKEN_SECRET);
-    const userId = userToken.userId;
+  try {
+    const userToken = await jwt.verify(req.header('x-auth-token'), process.env.ACCESS_TOKEN_SECRET)
+    const userId = userToken.userId
 
-    const order = await Order.findById(req.body.orderId);
-    if(!order){
+    const order = await Order.findById(req.body.orderId)
+    if (!order) {
       return res.status(500).json({
         success: false,
-        msg: "Order not found!"
+        msg: 'Order not found!'
       })
     }
 
-    if(order.buyer.toString() !== userId){
+    if (order.buyer.toString() !== userId) {
       return res.status(403).json({
         success: false,
-        msg: "Invalid User!"
+        msg: 'Invalid User!'
       })
     }
-
 
     let refundRequest = new RefundRequest({
       orderId: req.body.orderId,
@@ -65,38 +64,36 @@ const addRefundRequest = async (req, res) => {
       refundRequest,
       success: true
     })
-
-  }catch (error){
+  } catch (error) {
     res.status(403).json({
       success: false,
-      msg: "Invalid token"
-    });
+      msg: 'Invalid token'
+    })
   }
-
 }
 
 const getRefundRequestByOrderId = async (req, res) => {
-  const orderId = req.params.id;
+  const orderId = req.params.id
   try {
-    const userToken = await jwt.verify(req.header("x-auth-token"), process.env.ACCESS_TOKEN_SECRET);
-    const userId = userToken.userId;
+    const userToken = await jwt.verify(req.header('x-auth-token'), process.env.ACCESS_TOKEN_SECRET)
+    const userId = userToken.userId
 
-    const order = await Order.findById(orderId);
+    const order = await Order.findById(orderId)
     if (!order) {
       return res.status(500).json({
         success: false,
-        msg: "Order not found!"
+        msg: 'Order not found!'
       })
     }
 
     if (order.buyer.toString() !== userId) {
       return res.status(403).json({
         success: false,
-        msg: "Invalid User!"
+        msg: 'Invalid User!'
       })
     }
 
-    const refundRequest = await RefundRequest.findOne({orderId: mongoose.Types.ObjectId(orderId)}).populate("orderId").populate("buyerId");
+    const refundRequest = await RefundRequest.findOne({ orderId: mongoose.Types.ObjectId(orderId) }).populate('orderId').populate('buyerId')
     if (!refundRequest) {
       return res.status(500).json({
         success: true,
@@ -109,12 +106,11 @@ const getRefundRequestByOrderId = async (req, res) => {
       success: true,
       isFound: true
     })
-
   } catch (error) {
     res.status(403).json({
       success: false,
-      msg: "Invalid token"
-    });
+      msg: 'Invalid token'
+    })
   }
 }
 
