@@ -7,6 +7,7 @@ router.get("/active-orders", OrderController.getAllActiveOrders);
 router.get("/order-by-buyerId/:id", OrderController.getOrdersByBuyerId);
 router.get("/order-by-producerId/:id", OrderController.getOrdersByProducerId);
 router.get("/:id", OrderController.getOrderById);
+router.put("/update/delivery-status/:id", OrderController.updateOrderDeliveryStatus);
 // router.get("/year-period-of-sold", OrderController.getYearPeriodOfSold);
 // router.get("/:id", OrderController.getOrderCart);
 // router.post("/checkout", OrderController.setOrderDetails);
