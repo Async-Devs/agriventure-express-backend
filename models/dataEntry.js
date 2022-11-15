@@ -21,7 +21,7 @@ const dataEntrySchema = mongoose.Schema({
     required: true
   },
   cropAmount: {
-    type: String,
+    type: Number,
     required: true
   }
 })
