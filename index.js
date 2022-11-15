@@ -22,6 +22,7 @@ const producerUsersRouter = require('./routes/ProducerUsers');
 const orderRouter = require('./routes/orders');
 const buyerUsersRouter = require('./routes/BuyerUsers');
 const officerUsersRouter = require('./routes/OfficerUsers');
+const guestUsersRouter = require('./routes/GuestUsers');
 
 const express = require('express');
 
@@ -66,6 +67,7 @@ app.use(`${api}/publicUsers`,publicUsersToken,publicUsersRouter);
 app.use(`${api}/producerUsers`,producersToken,producerUsersRouter);
 app.use(`${api}/buyerUsers`,buyerToken,buyerUsersRouter);
 app.use(`${api}/officerUsers`,officerToken,officerUsersRouter);
+app.use(`${api}/guestUsers`,guestUsersRouter);
 
 mongoose.connect(process.env.CONNECTION_STRING, {
   useNewUrlParser: true,
