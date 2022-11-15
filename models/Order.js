@@ -42,6 +42,6 @@ const orderSchema = mongoose.Schema({
   order_delivery_address: String,
   order_delivery_city: String,
   order_delivery_zipcode: String
-});
+})
 
 exports.Order = mongoose.model('Order', orderSchema)

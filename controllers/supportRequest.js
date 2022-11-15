@@ -1,6 +1,6 @@
 const { SupportRequest } = require('../models/supportRequest')
-const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
+const jwt = require('jsonwebtoken')
+const mongoose = require('mongoose')
 
 const getAllSupportRequests = async (req, res) => {
   const supportRequestList = await SupportRequest.find().populate('producerId')
@@ -24,9 +24,9 @@ const getSupportRequestById = async (req, res) => {
 }
 
 const addSupportRequest = async (req, res) => {
-  try{
-    const userToken = await jwt.verify(req.header("x-auth-token"),process.env.ACCESS_TOKEN_SECRET);
-    const userId = userToken.userId;
+  try {
+    const userToken = await jwt.verify(req.header('x-auth-token'), process.env.ACCESS_TOKEN_SECRET)
+    const userId = userToken.userId
 
     let supportRequest = new SupportRequest({
       producerId: userId,
@@ -46,22 +46,20 @@ const addSupportRequest = async (req, res) => {
       supportRequest,
       success: true
     })
-
-  }catch (error){
+  } catch (error) {
     res.status(403).json({
       success: false,
-      msg: "Invalid token"
-    });
+      msg: 'Invalid token'
+    })
   }
-
 }
 
-const updateSupportRequest = async (req,res) => {
+const updateSupportRequest = async (req, res) => {
   const supportRequest = await SupportRequest.findByIdAndUpdate(req.body.id,
-      {
-        messages: req.body.messages
-      },{new: true});
-  if(!supportRequest){
+    {
+      messages: req.body.messages
+    }, { new: true })
+  if (!supportRequest) {
     return res.status(404).send({ message: 'The support request can not be updated', success: false })
   }
   res.send({
@@ -70,15 +68,16 @@ const updateSupportRequest = async (req,res) => {
   })
 }
 
-const getMySupportRequests = async (req,res) => {
-  console.log("routing done");
-  try{
-    const userToken = await jwt.verify(req.header("x-auth-token"),process.env.ACCESS_TOKEN_SECRET);
-    const userId = userToken.userId;
+const getMySupportRequests = async (req, res) => {
+  console.log('routing done')
+  try {
+    const userToken = await jwt.verify(req.header('x-auth-token'), process.env.ACCESS_TOKEN_SECRET)
+    const userId = userToken.userId
 
-    const supportRequests = await SupportRequest.find({producerId: mongoose.Types.ObjectId(userId)}).populate("producerId").populate("messages").sort({lastActiveDate: -1});
+    const supportRequests = await SupportRequest.find({ producerId: mongoose.Types.ObjectId(userId) }).populate('producerId').populate('messages').sort({ lastActiveDate: -1 })
 
-    if(!supportRequests){{}
+    if (!supportRequests) {
+      {}
       res.status(500).json({
         success: false,
         message: 'Support Requests not found'
@@ -87,13 +86,12 @@ const getMySupportRequests = async (req,res) => {
     res.send({
       supportRequests,
       success: true
-    });
-
-  }catch (error){
+    })
+  } catch (error) {
     res.status(403).json({
       success: false,
-      msg: "Invalid token"
-    });
+      msg: 'Invalid token'
+    })
   }
 }
 
