@@ -45,8 +45,6 @@ const addNewProducer = async (req, res) => {
 }
 
 const updateMyProfile = async (req, res) => {
-
-
   const producer = await Producer.findByIdAndUpdate(
     req.body.id,
     {

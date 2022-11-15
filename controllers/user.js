@@ -1,10 +1,10 @@
-const {User} = require("../models/user");
-const {Producer} = require("../models/producer");
-const mongoose = require("mongoose");
-const {Buyer} = require("../models/buyer");
-const bcrypt = require("bcrypt");
-const JWT = require('jsonwebtoken');
-const jwt = require("jsonwebtoken");
+const { User } = require('../models/user')
+const { Producer } = require('../models/producer')
+const mongoose = require('mongoose')
+const { Buyer } = require('../models/buyer')
+const bcrypt = require('bcrypt')
+const JWT = require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 
 const getAllUsers = async (req, res) => {
   const userList = await User.find()
@@ -77,129 +77,186 @@ const getUserById = async (req, res) => {
 }
 
 const getMyProfile = async (req, res) => {
-    console.log("routing done");
-    try{
-        const userToken = await jwt.verify(req.header("x-auth-token"),process.env.ACCESS_TOKEN_SECRET);
-        const userId = userToken.userId;
-        if (userToken.userType === 0) {
-            const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(userId) }).populate('location').populate('login');
-            if (!producer) {
-                res.status(500).json({
-                    success: false,
-                    message: 'Producer not found'
-                })
-            }
-
-            res.send(
-                {
-                    user: producer,
-                    success: true
-                }
-            )
-        } else if (userToken.userType === 1) {
-            const buyer = await Buyer.findOne({ login: mongoose.Types.ObjectId(userId) }).populate('login')
-            if (!buyer) {
-                res.status(500).json({
-                    success: false,
-                    message: 'Buyer not found'
-                })
-            }
-            res.send(
-                {
-                    user: buyer,
-                    success: true
-                }
-            )
-        }
-
-    }catch (error){
-        console.log(error)
-        res.status(403).json({
-            success: false,
-            msg: "Invalid token"
-        });
-    }
-
-}
-
-const addUser = async (req,res)=>{
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(req.body.password,salt);
-
-
-    let user = new User({
-        userName: req.body.userName,
-        password: hashedPassword,
-        userType: req.body.userType,
-        isActive: req.body.isActive
-    });
-
-    user = await user.save();
-    if(!user){
-        return res.status(500).json({
-            success: false
-        });
-    }
-    const accessToken = await JWT.sign(
-        {userName: user.userName,
-                userType: user.userType,
-                userId: user.id},
-                process.env.ACCESS_TOKEN_SECRET,
-        {expiresIn: "14400s"}
-    );
-    res.send({
-        user: user,
-        accessToken: accessToken,
-        success: true
-    });
-
-}
-
-const signIn = async (req,res) =>{
-    const user = await User.findOne({userName: req.body.userName});
-    if(!user){
-        return res.status(400).json({
-            success: false,
-            msg: "Invalid Username or password"
+  try {
+    const userToken = await jwt.verify(req.header('x-auth-token'), process.env.ACCESS_TOKEN_SECRET)
+    const userId = userToken.userId
+    if (userToken.userType === 0) {
+      const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(userId) }).populate('location').populate('login')
+      if (!producer) {
+        res.status(500).json({
+          success: false,
+          message: 'Producer not found'
         })
+      }
+
+      res.send(
+        {
+          user: producer,
+          success: true
+        }
+      )
+    } else if (userToken.userType === 1) {
+      const buyer = await Buyer.findOne({ login: mongoose.Types.ObjectId(userId) }).populate('login')
+      if (!buyer) {
+        res.status(500).json({
+          success: false,
+          message: 'Buyer not found'
+        })
+      }
+      res.send(
+        {
+          user: buyer,
+          success: true
+        }
+      )
     }
-
-    let isMatch = await bcrypt.compare(req.body.password,user.password);
-    if (!isMatch){
-        return res.status(401).json({
-            success: false,
-            msg: "Invalid Username or password"
-        });
-    }
-
-    const accessToken = await JWT.sign(
-        {userName: user.userName,
-            userType: user.userType,
-            userId: user.id},
-        process.env.ACCESS_TOKEN_SECRET,
-        {expiresIn: "240m"}
-    );
-
-    res.json({
-        success: true,
-        accessToken: accessToken,
-        userId: user.id,
-        userType: user.userType
-    });
-
-
-
-
-
+  } catch (error) {
+    console.log(error)
+    res.status(403).json({
+      success: false,
+      msg: 'Invalid token'
+    })
+  }
 }
 
+const editMyProfile = async (req, res) => {
+  try {
+    const userToken = await jwt.verify(req.header('x-auth-token'), process.env.ACCESS_TOKEN_SECRET)
+    const userId = userToken.userId
+    if (userToken.userType === 0) {
+      const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(userId) }).populate('location').populate('login')
+      if (!producer) {
+        res.status(500).json({
+          success: false,
+          message: 'Producer not found'
+        })
+      }
+
+      const producerId = producer._id
+
+      const producerUpdate = await Producer.findByIdAndUpdate(
+        producerId,
+        {
+          email: req.body.email,
+          telNum: req.body.telNum,
+          address: req.body.address
+        }, { new: true })
+      if (!producerUpdate) {
+        return res.status(404).send({ message: 'The producer can not be updated', success: false })
+      }
+      res.send({
+        success: true,
+        producerUpdate
+      })
+    } else if (userToken.userType === 1) {
+      const buyer = await Buyer.findOne({ login: mongoose.Types.ObjectId(userId) }).populate('login')
+      if (!buyer) {
+        res.status(500).json({
+          success: false,
+          message: 'Buyer not found'
+        })
+      }
+      buyerId = buyer._id
+
+      const buyerUpdate = await Buyer.findByIdAndUpdate(
+        buyerId,
+        {
+          email: req.body.email,
+          telNum: req.body.telNum,
+          address: req.body.address
+        }, { new: true })
+      if (!buyerUpdate) {
+        return res.status(404).send({ message: 'The buyer can not be updated', success: false })
+      }
+      res.send({
+        success: true,
+        producer: buyer
+      })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(403).json({
+      success: false,
+      msg: 'Invalid token'
+    })
+  }
+}
+
+const addUser = async (req, res) => {
+  const salt = await bcrypt.genSalt(10)
+  const hashedPassword = await bcrypt.hash(req.body.password, salt)
+
+  let user = new User({
+    userName: req.body.userName,
+    password: hashedPassword,
+    userType: req.body.userType,
+    isActive: req.body.isActive
+  })
+
+  user = await user.save()
+  if (!user) {
+    return res.status(500).json({
+      success: false
+    })
+  }
+  const accessToken = await JWT.sign(
+    {
+      userName: user.userName,
+      userType: user.userType,
+      userId: user.id
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: '14400s' }
+  )
+  res.send({
+    user,
+    accessToken,
+    success: true
+  })
+}
+
+const signIn = async (req, res) => {
+  const user = await User.findOne({ userName: req.body.userName })
+  if (!user) {
+    return res.status(400).json({
+      success: false,
+      msg: 'Invalid Username or password'
+    })
+  }
+
+  const isMatch = await bcrypt.compare(req.body.password, user.password)
+  if (!isMatch) {
+    return res.status(401).json({
+      success: false,
+      msg: 'Invalid Username or password'
+    })
+  }
+
+  const accessToken = await JWT.sign(
+    {
+      userName: user.userName,
+      userType: user.userType,
+      userId: user.id
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: '240m' }
+  )
+
+  res.json({
+    success: true,
+    accessToken,
+    userId: user.id,
+    userType: user.userType
+  })
+}
 
 module.exports = {
-    getAllUsers,
-    isExist,
-    getUserNames,
-    getUserById,
-    addUser,
-    signIn,
-    getMyProfile
+  getAllUsers,
+  isExist,
+  getUserNames,
+  getUserById,
+  addUser,
+  signIn,
+  getMyProfile,
+  editMyProfile
 }

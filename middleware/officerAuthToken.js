@@ -12,7 +12,7 @@ const authToken = async (req, res, next) => {
   } else {
     try {
       const user = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
-      if (user.userType === 0 || user.userType === 1) {
+      if (user.userType === 2) {
         next()
       } else {
         return res.status(403).json({
@@ -21,10 +21,9 @@ const authToken = async (req, res, next) => {
         })
       }
     } catch (error) {
-      console.log(error)
       res.status(403).json({
         success: false,
-        msg: 'Invalid found'
+        msg: 'Invalid token found'
       })
     }
   }
