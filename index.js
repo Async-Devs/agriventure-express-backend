@@ -19,7 +19,9 @@ const authRouter = require('./routes/auth');
 const districtRouter = require('./routes/districts');
 const publicUsersRouter = require('./routes/PublicUsers');
 const producerUsersRouter = require('./routes/ProducerUsers');
-const orderRouter = require('./routes/orders')
+const orderRouter = require('./routes/orders');
+const buyerUsersRouter = require('./routes/BuyerUsers');
+const officerUsersRouter = require('./routes/OfficerUsers');
 
 const express = require('express');
 
@@ -42,6 +44,8 @@ console.log(`${api}/items`)
 //authTokens
 const publicUsersToken = require('./middleware/publicUsersAuthToken');
 const producersToken = require('./middleware/producerAuthToken');
+const buyerToken = require('./middleware/buyerAuthToken');
+const officerToken = require('./middleware/officerAuthToken');
 
 
 // Routes
@@ -60,6 +64,8 @@ app.use(`${api}/disricts`, districtRouter)
 app.use(`${api}/auth`,authRouter);
 app.use(`${api}/publicUsers`,publicUsersToken,publicUsersRouter);
 app.use(`${api}/producerUsers`,producersToken,producerUsersRouter);
+app.use(`${api}/buyerUsers`,buyerToken,buyerUsersRouter);
+app.use(`${api}/officerUsers`,officerToken,officerUsersRouter);
 
 mongoose.connect(process.env.CONNECTION_STRING, {
   useNewUrlParser: true,

@@ -15,6 +15,16 @@ const supportRequestSchema = mongoose.Schema({
     required: true,
     default: true
   },
+  isProducerRead: {
+    type: Boolean,
+    required: true,
+    default: true
+  },
+  isOfficerRead: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
   date: {
     type: Date,
     required: true,

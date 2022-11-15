@@ -1,6 +1,7 @@
 const { SupportRequest } = require('../models/supportRequest')
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
+const {SupportRequestMessage} = require("../models/supportRequestMessage");
 
 const getAllSupportRequests = async (req, res) => {
   const supportRequestList = await SupportRequest.find().populate('producerId')
@@ -33,7 +34,9 @@ const addSupportRequest = async (req, res) => {
       type: req.body.type,
       description: req.body.description,
       subject: req.body.subject,
-      messages: []
+      messages: [],
+      date: Date.now(),
+      lastActiveDate: Date.now()
     })
 
     supportRequest = await supportRequest.save()
@@ -56,18 +59,59 @@ const addSupportRequest = async (req, res) => {
 
 }
 
-const updateSupportRequest = async (req,res) => {
-  const supportRequest = await SupportRequest.findByIdAndUpdate(req.body.id,
-      {
-        messages: req.body.messages
-      },{new: true});
-  if(!supportRequest){
-    return res.status(404).send({ message: 'The support request can not be updated', success: false })
+const openSupportRequest = async (req,res) => {
+
+  try{
+    const userToken = await jwt.verify(req.header("x-auth-token"),process.env.ACCESS_TOKEN_SECRET);
+    const userType = userToken.userType;
+    const form = userType ===0 ? {isProducerRead: true} : {isOfficerRead: true};
+    const supportRequest = await SupportRequest.findByIdAndUpdate(req.body.id,
+        form,{new: true});
+    if(!supportRequest){
+      return res.status(404).send({ message: 'The support request can not be updated', success: false })
+    }
+    res.send({
+      success: true,
+      supportRequest
+    })
+
+  }catch (error){
+    res.status(403).json({
+      success: false,
+      msg: "Invalid token"
+    });
   }
-  res.send({
-    success: true,
-    supportRequest
-  })
+
+}
+
+const updateSupportRequest = async (req,res) => {
+
+  try{
+    const userToken = await jwt.verify(req.header("x-auth-token"),process.env.ACCESS_TOKEN_SECRET);
+    const userType = userToken.userType;
+
+    const supportRequest = await SupportRequest.findByIdAndUpdate(req.body.id,
+        {
+          messages: req.body.messages,
+          lastActiveDate: Date.now(),
+          isProducerRead: userType === 0,
+          isOfficerRead: userType === 3
+        },{new: true});
+    if(!supportRequest){
+      return res.status(404).send({ message: 'The support request can not be updated', success: false })
+    }
+    res.send({
+      success: true,
+      supportRequest
+    })
+
+  }catch (error){
+    res.status(403).json({
+      success: false,
+      msg: "Invalid token"
+    });
+  }
+
 }
 
 const getMySupportRequests = async (req,res) => {
@@ -102,5 +146,6 @@ module.exports = {
   getSupportRequestById,
   addSupportRequest,
   getMySupportRequests,
-  updateSupportRequest
+  updateSupportRequest,
+  openSupportRequest
 }

@@ -6,10 +6,12 @@ const addSupportRequestMessage = async (req,res) => {
         const userToken = await jwt.verify(req.header("x-auth-token"),process.env.ACCESS_TOKEN_SECRET);
         const userId = userToken.userId;
 
+
         let supportRequestMessage = new SupportRequestMessage({
             senderId: userId,
             message: req.body.message,
-            requestId: req.body.requestId
+            requestId: req.body.requestId,
+            date: Date.now()
         })
 
         supportRequestMessage = await supportRequestMessage.save()
