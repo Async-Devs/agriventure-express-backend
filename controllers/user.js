@@ -31,12 +31,12 @@ const getUserNames = async (req, res) => {
 }
 
 const getUserById = async (req, res) => {
-  const user = await User.findById(req.query.id)
+  const user = await User.findById(req.params.id)
   if (!user) {
     res.status(500).json({ success: false, message: 'user not found!' })
   }
   if (user.userType === 0) {
-    const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(req.query.id) }).populate('location').populate('cropTypes').populate('login')
+    const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(req.params.id) }).populate('district').populate('login')
     if (!producer) {
       res.status(500).json({
         success: false,
@@ -46,8 +46,7 @@ const getUserById = async (req, res) => {
 
     res.send(
       {
-        user,
-        typeDetails: producer,
+        user: producer,
         success: true
       }
     )
@@ -61,8 +60,7 @@ const getUserById = async (req, res) => {
     }
     res.send(
       {
-        user,
-        typeDetails: buyer,
+        user: buyer,
         success: true
       }
     )
@@ -115,6 +113,57 @@ const getMyProfile = async (req, res) => {
     res.status(403).json({
       success: false,
       msg: 'Invalid token'
+    })
+  }
+}
+
+const approveUser = async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.body.id,
+    { isActive: true }
+  )
+
+  if (!user) {
+    return res.status(404).send({ message: 'The user can not be updated', success: false })
+  }
+  res.send({
+    success: true,
+    user
+  })
+}
+
+const editProfile = async (req, res) => {
+  const userId = req.body.id
+  if (req.body.userType === 0) {
+    const producerUpdate = await Producer.findByIdAndUpdate(
+      userId,
+      {
+        email: req.body.email,
+        telNum: req.body.telNum,
+        address: req.body.address,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName
+      }, { new: true })
+    if (!producerUpdate) {
+      return res.status(404).send({ message: 'The producer can not be updated', success: false })
+    }
+    res.send({
+      success: true,
+      producerUpdate
+    })
+  } else if (req.body.userType === 1) {
+    const buyerUpdate = await Buyer.findByIdAndUpdate(
+      userId,
+      {
+        email: req.body.email,
+        telNum: req.body.telNum,
+        address: req.body.address
+      }, { new: true })
+    if (!buyerUpdate) {
+      return res.status(404).send({ message: 'The buyer can not be updated', success: false })
+    }
+    res.send({
+      success: true,
+      producer: buyer
     })
   }
 }
@@ -185,7 +234,6 @@ const editMyProfile = async (req, res) => {
 const addUser = async (req, res) => {
   const salt = await bcrypt.genSalt(10)
   const hashedPassword = await bcrypt.hash(req.body.password, salt)
-
   let user = new User({
     userName: req.body.userName,
     password: hashedPassword,
@@ -258,5 +306,7 @@ module.exports = {
   addUser,
   signIn,
   getMyProfile,
-  editMyProfile
+  editMyProfile,
+  editProfile,
+  approveUser
 }

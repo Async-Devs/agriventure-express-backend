@@ -10,6 +10,14 @@ router.get('/', async (req, res) => {
   res.send(cropTypeList)
 })
 
+router.get('/:id', async (req, res) => {
+  const croptype = await CropType.findById(req.params.id)
+  if (!croptype) {
+    res.status(500).json({ success: false })
+  }
+  res.send(croptype)
+})
+
 router.post('/', async (req, res) => {
   let cropType = new CropType({
     name: req.body.name

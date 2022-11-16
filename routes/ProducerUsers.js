@@ -9,11 +9,11 @@ router.get("/mySupportRequest",supportRequestController.getMySupportRequests);
 router.get("/myRefundRequest",refundRequestController.getMyRefundRequests);
 router.get("/google-API-key",location.getGoogleAPIkey);
 
-router.post("/addSupportRequest",supportRequestController.addSupportRequest);
-router.post("/addSupportRequestMessage",supportRequestMessageController.addSupportRequestMessage);
+router.post('/addSupportRequest', supportRequestController.addSupportRequest)
+router.post('/addSupportRequestMessage', supportRequestMessageController.addSupportRequestMessage)
 
-router.put("/addSupportRequestMessage",supportRequestController.updateSupportRequest);
-router.put("/editMyProfile",producerRouter.updateMyProfile);
-router.put('/openSupportRequest',supportRequestController.openSupportRequest);
+router.put('/addSupportRequestMessage', supportRequestController.updateSupportRequest)
+router.put('/editMyProfile', producerRouter.updateMyProfile)
+router.put('/openSupportRequest', supportRequestController.openSupportRequest)
 
 module.exports = router;

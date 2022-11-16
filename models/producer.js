@@ -30,9 +30,13 @@ const producerSchema = mongoose.Schema({
     ref: 'User',
     required: true
   },
-  location: {
+  district: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Location',
+    ref: 'Districts',
+    required: true
+  },
+  city: {
+    type: String,
     required: true
   }
 })
