@@ -69,7 +69,7 @@ app.use(`${api}/producerUsers`, producersToken, producerUsersRouter)
 app.use(`${api}/buyerUsers`, buyerToken, buyerUsersRouter)
 app.use(`${api}/officerUsers`, officerToken, officerUsersRouter)
 app.use(`${api}/guestUsers`, guestUsersRouter)
-app.use(`${api}/allUsers`,userToken, usersRouter)
+app.use(`${api}/allUsers`, userToken, usersRouter)
 
 mongoose.connect(process.env.CONNECTION_STRING, {
   useNewUrlParser: true,

@@ -34,13 +34,11 @@ class OrderController {
     console.log('get order - ', orderDetails)
     return res.send(orderDetails)
   };
-	static async updateOrderDeliveryStatus (req, res) {
-		const orderId = req.params.id;
-		console.log("update DeliveryStatus order Id - ",orderId);
-	};
-	
-	
-	
+
+  static async updateOrderDeliveryStatus (req, res) {
+    const orderId = req.params.id
+    console.log('update DeliveryStatus order Id - ', orderId)
+  };
 }
 
 module.exports.OrderController = OrderController

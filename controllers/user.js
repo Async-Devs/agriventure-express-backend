@@ -118,9 +118,8 @@ const getMyProfile = async (req, res) => {
 }
 
 const approveUser = async (req, res) => {
-
   const user = await User.findByIdAndUpdate(req.body.id,
-  {isActive: true}
+    { isActive: true }
   )
 
   if (!user) {
@@ -130,45 +129,43 @@ const approveUser = async (req, res) => {
     success: true,
     user
   })
-
 }
 
 const editProfile = async (req, res) => {
-    const userId = req.body.id;
-    if (req.body.userType === 0) {
-      const producerUpdate = await Producer.findByIdAndUpdate(
-          userId,
-          {
-            email: req.body.email,
-            telNum: req.body.telNum,
-            address: req.body.address,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName
-          }, { new: true })
-      if (!producerUpdate) {
-        return res.status(404).send({ message: 'The producer can not be updated', success: false })
-      }
-      res.send({
-        success: true,
-        producerUpdate
-      })
-    } else if (req.body.userType === 1) {
-
-      const buyerUpdate = await Buyer.findByIdAndUpdate(
-          userId,
-          {
-            email: req.body.email,
-            telNum: req.body.telNum,
-            address: req.body.address
-          }, { new: true })
-      if (!buyerUpdate) {
-        return res.status(404).send({ message: 'The buyer can not be updated', success: false })
-      }
-      res.send({
-        success: true,
-        producer: buyer
-      })
+  const userId = req.body.id
+  if (req.body.userType === 0) {
+    const producerUpdate = await Producer.findByIdAndUpdate(
+      userId,
+      {
+        email: req.body.email,
+        telNum: req.body.telNum,
+        address: req.body.address,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName
+      }, { new: true })
+    if (!producerUpdate) {
+      return res.status(404).send({ message: 'The producer can not be updated', success: false })
     }
+    res.send({
+      success: true,
+      producerUpdate
+    })
+  } else if (req.body.userType === 1) {
+    const buyerUpdate = await Buyer.findByIdAndUpdate(
+      userId,
+      {
+        email: req.body.email,
+        telNum: req.body.telNum,
+        address: req.body.address
+      }, { new: true })
+    if (!buyerUpdate) {
+      return res.status(404).send({ message: 'The buyer can not be updated', success: false })
+    }
+    res.send({
+      success: true,
+      producer: buyer
+    })
+  }
 }
 
 const editMyProfile = async (req, res) => {

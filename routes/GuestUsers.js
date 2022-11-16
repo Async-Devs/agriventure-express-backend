@@ -7,4 +7,7 @@ router.get('/getAllDataEntry', dataEntryController.getAllDataEntry)
 router.get('/getDistrictById/:id', DistrictController.getDistrictById)
 router.get('/getAllLocations', districtController.getAllDistrict)
 
+router.get('/cropDetails', dataEntryController.getCropDetails)
+router.get('/districtDetails', dataEntryController.getDistrictDetails)
+
 module.exports = router
