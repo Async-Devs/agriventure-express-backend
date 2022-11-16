@@ -16,6 +16,10 @@ const orderSchema = mongoose.Schema({
     ref: 'Item',
     required: true
   },
+  messages: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'ChatMessage'
+  }],
   order_status: {
     type: String,
     required: true, // ACTIVE, COMPLETE, REMOVED
