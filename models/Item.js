@@ -5,6 +5,10 @@ const itemSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  crop: {
+    type: String,
+    required: true
+  },
   images: {
     type: [{
       src: String
@@ -35,7 +39,11 @@ const itemSchema = mongoose.Schema({
   bidding_array: {
     type: [{
       time_stamp: Date,
-      bidder_name: String, // Change this to Ref of Buyer later: User Auth WIP
+      bidder: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+      },
       bid_amount: Number
     }]
   },
@@ -47,6 +55,11 @@ const itemSchema = mongoose.Schema({
     type: String,
     required: true,
     default: 'ACTIVE'		// ACTIVE, ENDED, REMOVED
+  },
+  producer: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   }
 })
 

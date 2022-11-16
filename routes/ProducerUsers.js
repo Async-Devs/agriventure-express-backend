@@ -3,9 +3,11 @@ const supportRequestController = require('../controllers/supportRequest');
 const refundRequestController = require('../controllers/refundRequest');
 const supportRequestMessageController = require('../controllers/supportRequestMessage');
 const producerRouter = require('../controllers/producer');
+const location = require('../controllers/location')
 
 router.get("/mySupportRequest",supportRequestController.getMySupportRequests);
 router.get("/myRefundRequest",refundRequestController.getMyRefundRequests);
+router.get("/google-API-key",location.getGoogleAPIkey);
 
 router.post("/addSupportRequest",supportRequestController.addSupportRequest);
 router.post("/addSupportRequestMessage",supportRequestMessageController.addSupportRequestMessage);
