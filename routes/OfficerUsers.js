@@ -1,18 +1,27 @@
 const router = require('express').Router()
 const producerController = require('../controllers/producer')
+const buyerController = require('../controllers/buyer')
 const dataEntryController = require('../controllers/dataEntry')
 const { DistrictController } = require('../controllers/districts')
+const userController = require('../controllers/user')
 
 router.get('/getAllDataEntry', dataEntryController.getAllDataEntry)
-router.post('/addDataEntry', dataEntryController.addDataEntry)
+router.get('/getAllProducers', producerController.getAllProducers)
+router.get('/getByUserId', producerController.getUserById)
+router.get('/getUserById/:id', userController.getUserById)
+router.get('/getAllDistricts', DistrictController.getAllDistricts)
+
 router.put('/updateDataEntry', dataEntryController.updateDataEntry)
+router.put("/updateProfile",userController.editProfile);
+
+router.delete('/deleteById/:id/:userId', producerController.deleteById)
 router.delete('/deleteDataById/:id', dataEntryController.deleteDataById)
 
-router.get('/getAllProducers', producerController.getAllProducers)
 router.post('/addNewProducer', producerController.addNewProducer)
-router.get('/getByUserId', producerController.getUserById)
-router.delete('/deleteById/:id/:userId', producerController.deleteById)
+router.post('/addDataEntry', dataEntryController.addDataEntry)
 
-router.get('/getAllDistricts', DistrictController.getAllDistricts)
+
+
+
 
 module.exports = router

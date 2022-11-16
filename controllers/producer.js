@@ -3,11 +3,14 @@ const { Location } = require('../models/location')
 const { User } = require('../models/user')
 
 const getAllProducers = async (req, res) => {
-  const producerList = await Producer.find().populate('location').populate('login').populate('cropTypes')
+  const producerList = await Producer.find().populate('location').populate('login')
   if (!producerList) {
     res.status(500).json({ success: false })
   }
-  res.send(producerList)
+  res.send({
+    producerList,
+    success: true
+  })
 }
 
 const addNewProducer = async (req, res) => {
@@ -61,6 +64,24 @@ const updateMyProfile = async (req, res) => {
   })
 }
 
+const updateProfile = async (req, res) => {
+  const producer = await Producer.findByIdAndUpdate(
+      req.body.id,
+      {
+        email: req.body.email,
+        telNum: req.body.telNum,
+        address: req.body.address
+      }, { new: true })
+  if (!producer) {
+    return res.status(404).send({ message: 'The producer can not be updated', success: false })
+  }
+  res.send({
+    success: true,
+    producer
+  })
+}
+
+
 const getUserById = async (req, res) => {
   const producer = await Producer.findOne({ login: req.query.login }).populate('location').populate('cropTypes').populate('login')
   if (!producer) {
@@ -112,5 +133,6 @@ module.exports = {
   addNewProducer,
   updateMyProfile,
   getUserById,
-  deleteById
+  deleteById,
+  updateProfile
 }

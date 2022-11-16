@@ -31,12 +31,12 @@ const getUserNames = async (req, res) => {
 }
 
 const getUserById = async (req, res) => {
-  const user = await User.findById(req.query.id)
+  const user = await User.findById(req.params.id)
   if (!user) {
     res.status(500).json({ success: false, message: 'user not found!' })
   }
   if (user.userType === 0) {
-    const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(req.query.id) }).populate('location').populate('cropTypes').populate('login')
+    const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(req.params.id) }).populate('location').populate('login')
     if (!producer) {
       res.status(500).json({
         success: false,
@@ -46,8 +46,7 @@ const getUserById = async (req, res) => {
 
     res.send(
       {
-        user,
-        typeDetails: producer,
+        user: producer,
         success: true
       }
     )
@@ -61,8 +60,7 @@ const getUserById = async (req, res) => {
     }
     res.send(
       {
-        user,
-        typeDetails: buyer,
+        user: buyer,
         success: true
       }
     )
@@ -117,6 +115,44 @@ const getMyProfile = async (req, res) => {
       msg: 'Invalid token'
     })
   }
+}
+
+const editProfile = async (req, res) => {
+    const userId = req.body.id;
+    if (req.body.userType === 0) {
+      const producerUpdate = await Producer.findByIdAndUpdate(
+          userId,
+          {
+            email: req.body.email,
+            telNum: req.body.telNum,
+            address: req.body.address,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName
+          }, { new: true })
+      if (!producerUpdate) {
+        return res.status(404).send({ message: 'The producer can not be updated', success: false })
+      }
+      res.send({
+        success: true,
+        producerUpdate
+      })
+    } else if (req.body.userType === 1) {
+
+      const buyerUpdate = await Buyer.findByIdAndUpdate(
+          userId,
+          {
+            email: req.body.email,
+            telNum: req.body.telNum,
+            address: req.body.address
+          }, { new: true })
+      if (!buyerUpdate) {
+        return res.status(404).send({ message: 'The buyer can not be updated', success: false })
+      }
+      res.send({
+        success: true,
+        producer: buyer
+      })
+    }
 }
 
 const editMyProfile = async (req, res) => {
@@ -258,5 +294,6 @@ module.exports = {
   addUser,
   signIn,
   getMyProfile,
-  editMyProfile
+  editMyProfile,
+  editProfile
 }
