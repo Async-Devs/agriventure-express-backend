@@ -45,7 +45,6 @@ const addRefundRequest = async (req, res) => {
       })
     }
 
-
     let refundRequest = new RefundRequest({
       orderId: req.body.orderId,
       buyerId: userId,
@@ -74,7 +73,6 @@ const addRefundRequest = async (req, res) => {
       msg: "Invalid token"
     });
   }
-
 }
 
 const getRefundRequestByOrderId = async (req, res) => {
@@ -112,7 +110,6 @@ const getRefundRequestByOrderId = async (req, res) => {
       success: true,
       isFound: true
     })
-
   } catch (error) {
     res.status(403).json({
       success: false,
