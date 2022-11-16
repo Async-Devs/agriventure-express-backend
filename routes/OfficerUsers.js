@@ -1,6 +1,5 @@
 const router = require('express').Router()
 const producerController = require('../controllers/producer')
-const buyerController = require('../controllers/buyer')
 const dataEntryController = require('../controllers/dataEntry')
 const { DistrictController } = require('../controllers/districts')
 const userController = require('../controllers/user')
@@ -13,6 +12,7 @@ router.get('/getAllDistricts', DistrictController.getAllDistricts)
 
 router.put('/updateDataEntry', dataEntryController.updateDataEntry)
 router.put("/updateProfile",userController.editProfile);
+router.put("/approveUser",userController.approveUser);
 
 router.delete('/deleteById/:id/:userId', producerController.deleteById)
 router.delete('/deleteDataById/:id', dataEntryController.deleteDataById)
