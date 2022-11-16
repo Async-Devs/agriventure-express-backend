@@ -36,7 +36,7 @@ const getUserById = async (req, res) => {
     res.status(500).json({ success: false, message: 'user not found!' })
   }
   if (user.userType === 0) {
-    const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(req.params.id) }).populate('location').populate('login')
+    const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(req.params.id) }).populate('district').populate('login')
     if (!producer) {
       res.status(500).json({
         success: false,
@@ -115,6 +115,22 @@ const getMyProfile = async (req, res) => {
       msg: 'Invalid token'
     })
   }
+}
+
+const approveUser = async (req, res) => {
+
+  const user = await User.findByIdAndUpdate(req.body.id,
+  {isActive: true}
+  )
+
+  if (!user) {
+    return res.status(404).send({ message: 'The user can not be updated', success: false })
+  }
+  res.send({
+    success: true,
+    user
+  })
+
 }
 
 const editProfile = async (req, res) => {
@@ -221,7 +237,6 @@ const editMyProfile = async (req, res) => {
 const addUser = async (req, res) => {
   const salt = await bcrypt.genSalt(10)
   const hashedPassword = await bcrypt.hash(req.body.password, salt)
-
   let user = new User({
     userName: req.body.userName,
     password: hashedPassword,
@@ -295,5 +310,6 @@ module.exports = {
   signIn,
   getMyProfile,
   editMyProfile,
-  editProfile
+  editProfile,
+  approveUser
 }

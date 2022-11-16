@@ -2,8 +2,7 @@ const mongoose = require('mongoose')
 const {Districts} = require("../models/districts");
 
 const getAllDistrict =  async (req, res) => {
-    console.log("routing done")
-    const districtList = await Districts.find()
+    const districtList = await Districts.find().sort({'name':1})
     if (!districtList) {
         res.status(500).json({ success: false })
     }

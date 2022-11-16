@@ -1,9 +1,10 @@
 const { Producer } = require('../models/producer')
 const { Location } = require('../models/location')
 const { User } = require('../models/user')
+const {Districts} = require('../models/districts')
 
 const getAllProducers = async (req, res) => {
-  const producerList = await Producer.find().populate('location').populate('login')
+  const producerList = await Producer.find().populate('district').populate('login')
   if (!producerList) {
     res.status(500).json({ success: false })
   }
@@ -14,16 +15,21 @@ const getAllProducers = async (req, res) => {
 }
 
 const addNewProducer = async (req, res) => {
-  const location = await Location.findById(req.body.location)
-  if (!location) {
-    return res.status(400).send('Invalid location')
+
+  console.log(req.body);
+  const district = await Districts.findById(req.body.district)
+  if (!district) {
+    return res.status(400).send('Invalid district')
   }
+
+  console.log("district found")
 
   const login = await User.findById(req.body.login)
   if (!login) {
     return res.status(400).send('Invalid user')
   }
 
+  console.log("login found")
   let producer = new Producer({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -32,7 +38,8 @@ const addNewProducer = async (req, res) => {
     address: req.body.address,
     telNum: req.body.telNum,
     login: req.body.login,
-    location: req.body.location
+    district: req.body.district,
+    city: req.body.city
   })
 
   producer = await producer.save()
