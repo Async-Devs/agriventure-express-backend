@@ -7,6 +7,14 @@ class ItemController {
     return res.send(itemArray)
     // eslint-disable-next-line no-mixed-spaces-and-tabs,no-tabs
   	};
+  
+  static async getAllListingByProducerId (req, res) {
+    let itemListings = [];
+    // eslint-disable-next-line no-mixed-spaces-and-tabs,no-tabs
+    console.log("Get items for producer",  )
+    return res.send(itemListings)
+    // eslint-disable-next-line no-mixed-spaces-and-tabs,no-tabs
+  	};
 
   static async getItemById (req, res) {
     let item = null
