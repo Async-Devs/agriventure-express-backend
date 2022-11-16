@@ -30,16 +30,15 @@ const producerSchema = mongoose.Schema({
     ref: 'User',
     required: true
   },
-  cropTypes: [{
+  district: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'CropType',
+    ref: 'Districts',
     required: true
-  }],
-  location: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Location',
+  },
+  city: {
+    type: String,
     required: true
   }
-})
+});
 
 exports.Producer = mongoose.model('Producer', producerSchema)

@@ -1,7 +1,6 @@
-// body,sender,receiver, time
 const mongoose = require('mongoose')
 
-const chatMessageSchema = mongoose.Schema({
+const supportRequestMessageSchema = mongoose.Schema({
   senderId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -11,11 +10,17 @@ const chatMessageSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  requestId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'SupportRequest',
+    required: true
+  },
   date: {
     type: Date,
     required: true,
     default: Date.now()
   }
+
 })
 
-exports.ChatMessage = mongoose.model('ChatMessage', chatMessageSchema)
+exports.SupportRequestMessage = mongoose.model('SupportRequestMessage', supportRequestMessageSchema)

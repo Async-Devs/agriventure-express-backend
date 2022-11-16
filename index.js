@@ -15,14 +15,24 @@ const officerRouter = require('./routes/officer')
 const chatMessageRouter = require('./routes/chatMessage')
 const itemRouter = require('./routes/items')
 const dataRouter = require('./routes/dataEntry')
+const authRouter = require('./routes/auth')
 const districtRouter = require('./routes/districts')
-const districtDataRouter = require('./routes/districtData')
+const publicUsersRouter = require('./routes/PublicUsers')
+const producerUsersRouter = require('./routes/ProducerUsers')
+const orderRouter = require('./routes/orders')
+const buyerUsersRouter = require('./routes/BuyerUsers')
+const officerUsersRouter = require('./routes/OfficerUsers')
+const guestUsersRouter = require('./routes/GuestUsers')
+const usersRouter = require('./routes/Users')
 
 const express = require('express')
 
 const PORT = process.env.PORT || 3001
 const api = process.env.API_URL
 const app = express()
+// Socket.io
+const server = require('http').createServer(app)
+const io = require('socket.io')(server, { cors: { origin: '*' } })
 
 app.use(cors())
 app.options('*', cors())
@@ -32,6 +42,14 @@ app.use(bodyParser.json())
 app.use(morgan('tiny'))
 console.log(api)
 console.log(`${api}/items`)
+
+// authTokens
+const publicUsersToken = require('./middleware/publicUsersAuthToken')
+const producersToken = require('./middleware/producerAuthToken')
+const buyerToken = require('./middleware/buyerAuthToken')
+const officerToken = require('./middleware/officerAuthToken')
+const userToken = require('./middleware/usersAuthToken')
+
 // Routes
 app.use(`${api}/producers`, producerRouter)
 app.use(`${api}/locations`, locationRouter)
@@ -42,9 +60,16 @@ app.use(`${api}/dataEntries`, dataEntryRouter)
 app.use(`${api}/officer`, officerRouter)
 app.use(`${api}/chatMessage`, chatMessageRouter)
 app.use(`${api}/items`, itemRouter)
+app.use(`${api}/orders`, orderRouter)
 app.use(`${api}/dataEntries`, dataRouter)
-app.use(`${api}/districts`, districtRouter)
-app.use(`${api}/districtDatas`, districtDataRouter)
+app.use(`${api}/disricts`, districtRouter)
+app.use(`${api}/auth`, authRouter)
+app.use(`${api}/publicUsers`, publicUsersToken, publicUsersRouter)
+app.use(`${api}/producerUsers`, producersToken, producerUsersRouter)
+app.use(`${api}/buyerUsers`, buyerToken, buyerUsersRouter)
+app.use(`${api}/officerUsers`, officerToken, officerUsersRouter)
+app.use(`${api}/guestUsers`, guestUsersRouter)
+app.use(`${api}/allUsers`,userToken, usersRouter)
 
 mongoose.connect(process.env.CONNECTION_STRING, {
   useNewUrlParser: true,
@@ -57,6 +82,10 @@ mongoose.connect(process.env.CONNECTION_STRING, {
   console.log(err)
 })
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`)
+})
+
+io.on('connect', (socket) => {
+  console.log('a user connected of ID: ', socket.id)
 })

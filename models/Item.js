@@ -29,7 +29,7 @@ const itemSchema = mongoose.Schema({
     required: true
   },
   minimum_bid: {
-    type: String,
+    type: Number,
     default: 0
   },
   bidding_array: {

@@ -6,9 +6,44 @@ const refundRequestSchema = mongoose.Schema({
     ref: 'Order',
     required: true
   },
+  buyerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  producerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   refundValue: {
     type: Number,
     required: true
+  },
+  isActive: {
+    type: Boolean,
+    required: true,
+    default: true
+  },
+  isProducerRead: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  isBuyerRead: {
+    type: Boolean,
+    required: true,
+    default: true
+  },
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now()
+  },
+  lastActiveDate: {
+    type: Date,
+    required: true,
+    default: Date.now()
   },
   description: {
     type: String,
@@ -16,7 +51,7 @@ const refundRequestSchema = mongoose.Schema({
   },
   messages: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'ChatMessage'
+    ref: 'RefundRequestMessage'
   }]
 })
 

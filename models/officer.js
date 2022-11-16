@@ -17,18 +17,14 @@ const officerSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  telNum: {
-    type: String,
-    required: true
-  },
   login: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
   location: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Location'
+    type: String,
+    required: true
   },
   officerType: {
     type: Number,

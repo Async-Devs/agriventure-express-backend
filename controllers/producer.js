@@ -1,27 +1,35 @@
 const { Producer } = require('../models/producer')
 const { Location } = require('../models/location')
 const { User } = require('../models/user')
-const { CropType } = require('../models/cropType')
+const {Districts} = require('../models/districts')
 
 const getAllProducers = async (req, res) => {
-  const producerList = await Producer.find().populate('location').populate('login').populate('cropTypes')
+  const producerList = await Producer.find().populate('district').populate('login')
   if (!producerList) {
     res.status(500).json({ success: false })
   }
-  res.send(producerList)
+  res.send({
+    producerList,
+    success: true
+  })
 }
 
 const addNewProducer = async (req, res) => {
-  const location = await Location.findById(req.body.location)
-  if (!location) {
-    return res.status(400).send('Invalid location')
+
+  console.log(req.body);
+  const district = await Districts.findById(req.body.district)
+  if (!district) {
+    return res.status(400).send('Invalid district')
   }
+
+  console.log("district found")
 
   const login = await User.findById(req.body.login)
   if (!login) {
     return res.status(400).send('Invalid user')
   }
 
+  console.log("login found")
   let producer = new Producer({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -30,8 +38,8 @@ const addNewProducer = async (req, res) => {
     address: req.body.address,
     telNum: req.body.telNum,
     login: req.body.login,
-    cropTypes: req.body.cropTypes,
-    location: req.body.location
+    district: req.body.district,
+    city: req.body.city
   })
 
   producer = await producer.save()
@@ -47,20 +55,12 @@ const addNewProducer = async (req, res) => {
 }
 
 const updateMyProfile = async (req, res) => {
-  for (let i = 0; i < req.body.cropTypes.length; i++) {
-    const cropType = await CropType.findById(req.body.cropTypes[i])
-    if (!cropType) {
-      return res.status(400).send({ success: false, message: 'Invalid crop type ' + req.body.cropTypes[i] })
-    }
-  }
-
   const producer = await Producer.findByIdAndUpdate(
     req.body.id,
     {
       email: req.body.email,
       telNum: req.body.telNum,
-      address: req.body.address,
-      cropTypes: req.body.cropTypes
+      address: req.body.address
     }, { new: true })
   if (!producer) {
     return res.status(404).send({ message: 'The producer can not be updated', success: false })
@@ -70,6 +70,24 @@ const updateMyProfile = async (req, res) => {
     producer
   })
 }
+
+const updateProfile = async (req, res) => {
+  const producer = await Producer.findByIdAndUpdate(
+      req.body.id,
+      {
+        email: req.body.email,
+        telNum: req.body.telNum,
+        address: req.body.address
+      }, { new: true })
+  if (!producer) {
+    return res.status(404).send({ message: 'The producer can not be updated', success: false })
+  }
+  res.send({
+    success: true,
+    producer
+  })
+}
+
 
 const getUserById = async (req, res) => {
   const producer = await Producer.findOne({ login: req.query.login }).populate('location').populate('cropTypes').populate('login')
@@ -122,5 +140,6 @@ module.exports = {
   addNewProducer,
   updateMyProfile,
   getUserById,
-  deleteById
+  deleteById,
+  updateProfile
 }

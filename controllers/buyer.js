@@ -85,7 +85,6 @@ const deleteUser = (req, res) => {
 }
 
 const updateProfile = async (req, res) => {
-  console.log(req.body.id)
   const buyer = await Buyer.findByIdAndUpdate(
     req.body.id,
     {
