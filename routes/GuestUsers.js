@@ -5,6 +5,6 @@ const districtController = require('../controllers/district')
 
 router.get('/getAllDataEntry', dataEntryController.getAllDataEntry)
 router.get('/getDistrictById/:id', DistrictController.getDistrictById)
-router.get('/getAllLocations',districtController.getAllDistrict)
+router.get('/getAllLocations', districtController.getAllDistrict)
 
 module.exports = router
