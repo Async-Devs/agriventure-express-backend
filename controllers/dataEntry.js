@@ -8,6 +8,60 @@ const getAllDataEntry = async (req, res) => {
   res.send(dataList)
 }
 
+const getCropDetails = async (req, res) => {
+  const dataList = await DataEntry.aggregate([
+    {
+      $group: {
+        _id: {
+          year: {
+            $toInt: '$year'
+          },
+          cropType: '$cropType'
+        },
+        totalAmount: {
+          $sum: '$cropAmount'
+        }
+      }
+    }, {
+      $sort: {
+        '_id.year': 1
+      }
+    }
+  ])
+
+  if (!dataList) {
+    res.status(500).json({ success: false })
+  }
+  res.send(dataList)
+}
+
+const getDistrictDetails = async (req, res) => {
+  const dataList = await DataEntry.aggregate([
+    {
+      $group: {
+        _id: {
+          year: {
+            $toInt: '$year'
+          },
+          district: '$district',
+          cropType: '$cropType'
+        },
+        totalAmount: {
+          $sum: '$cropAmount'
+        }
+      }
+    }, {
+      $sort: {
+        '_id.year': 1
+      }
+    }
+  ])
+  if (!dataList) {
+    res.status(500).json({ success: false })
+  }
+  res.send(dataList)
+}
+
 const addDataEntry = async (req, res) => {
   let data = new DataEntry({
     year: req.body.data.year,
@@ -47,7 +101,6 @@ const updateDataEntry = async (req, res) => {
 
 const deleteDataById = (req, res) => {
   DataEntry.findByIdAndRemove(req.params.id).then(data => {
-    console.log(req.params.id)
     if (data) {
       return res.status(200).json({
         success: true,
@@ -69,5 +122,7 @@ module.exports = {
   getAllDataEntry,
   addDataEntry,
   updateDataEntry,
-  deleteDataById
+  deleteDataById,
+  getDistrictDetails,
+  getCropDetails
 }

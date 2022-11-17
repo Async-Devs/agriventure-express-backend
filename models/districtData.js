@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const dataEntrySchema = mongoose.Schema({
+const districtDataSchema = mongoose.Schema({
   year: {
     type: String,
     required: true
@@ -16,14 +16,10 @@ const dataEntrySchema = mongoose.Schema({
     ref: 'Districts',
     required: true
   },
-  city: {
+  totalCropAmount: {
     type: String,
-    required: true
-  },
-  cropAmount: {
-    type: Number,
     required: true
   }
 })
 
-exports.DataEntry = mongoose.model('DataEntry', dataEntrySchema)
+exports.DistrictData = mongoose.model('DistrictData', districtDataSchema)

@@ -1,7 +1,8 @@
 const { Producer } = require('../models/producer')
 const { Location } = require('../models/location')
 const { User } = require('../models/user')
-const {Districts} = require('../models/districts')
+const { Districts } = require('../models/districts')
+const { DataEntry } = require('../models/dataEntry')
 
 const getAllProducers = async (req, res) => {
   const producerList = await Producer.find().populate('district').populate('login')
@@ -12,6 +13,19 @@ const getAllProducers = async (req, res) => {
     producerList,
     success: true
   })
+}
+
+const getNoOfProducers = async (req, res) => {
+  const dataList = await Producer.aggregate([
+    {
+      $count: 'id'
+    }
+  ])
+
+  if (!dataList) {
+    res.status(500).json({ success: false })
+  }
+  res.send(dataList)
 }
 
 const addNewProducer = async (req, res) => {
@@ -70,12 +84,12 @@ const updateMyProfile = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   const producer = await Producer.findByIdAndUpdate(
-      req.body.id,
-      {
-        email: req.body.email,
-        telNum: req.body.telNum,
-        address: req.body.address
-      }, { new: true })
+    req.body.id,
+    {
+      email: req.body.email,
+      telNum: req.body.telNum,
+      address: req.body.address
+    }, { new: true })
   if (!producer) {
     return res.status(404).send({ message: 'The producer can not be updated', success: false })
   }
@@ -84,7 +98,6 @@ const updateProfile = async (req, res) => {
     producer
   })
 }
-
 
 const getUserById = async (req, res) => {
   const producer = await Producer.findOne({ login: req.query.login }).populate('location').populate('cropTypes').populate('login')
@@ -138,5 +151,6 @@ module.exports = {
   updateMyProfile,
   getUserById,
   deleteById,
-  updateProfile
+  updateProfile,
+  getNoOfProducers
 }

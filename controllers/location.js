@@ -23,7 +23,14 @@ const addLocation = async (req, res) => {
   res.send(location)
 }
 
+const getGoogleAPIkey = async (req, res) => {
+ const googleApiKey = process.env.GOOGLE_API_KEY;
+ console.log(googleApiKey);
+  res.send(googleApiKey)
+}
+
 module.exports = {
   getAllLocations,
-  addLocation
+  addLocation,
+  getGoogleAPIkey
 }

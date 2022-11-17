@@ -39,6 +39,6 @@ const producerSchema = mongoose.Schema({
     type: String,
     required: true
   }
-});
+})
 
 exports.Producer = mongoose.model('Producer', producerSchema)

@@ -37,8 +37,26 @@ class OrderController {
     return res.send(orderDetails)
   };
 	static async updateOrderDeliveryStatus (req, res) {
-		const orderId = req.params.id;
-		console.log("update DeliveryStatus order Id - ",orderId);
+      let result = null;
+      try {
+        const orderId = req.params.id
+        const orderUpdatedStatus = req.body.status
+        console.log('update DeliveryStatus order Id - ', orderId, orderUpdatedStatus)
+        if (orderUpdatedStatus == 'DELIVERED') {
+          result = await Order.findOneAndUpdate({ _id: orderId }, {
+            delivery_status: orderUpdatedStatus,
+            order_status: 'COMPLETE'
+          })
+        } else {
+          result = await Order.findOneAndUpdate({ _id: orderId }, {
+            delivery_status: orderUpdatedStatus,
+            order_status: 'ACTIVE'
+          })
+        }
+      }catch (e){
+        result = "Error";
+      }
+        return  res.send(result);
 	};
 
 	
