@@ -16,20 +16,17 @@ const getAllProducers = async (req, res) => {
 
 const addNewProducer = async (req, res) => {
 
-  console.log(req.body);
   const district = await Districts.findById(req.body.district)
   if (!district) {
     return res.status(400).send('Invalid district')
   }
 
-  console.log("district found")
 
   const login = await User.findById(req.body.login)
   if (!login) {
     return res.status(400).send('Invalid user')
   }
 
-  console.log("login found")
   let producer = new Producer({
     firstName: req.body.firstName,
     lastName: req.body.lastName,

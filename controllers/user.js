@@ -79,14 +79,13 @@ const getMyProfile = async (req, res) => {
     const userToken = await jwt.verify(req.header('x-auth-token'), process.env.ACCESS_TOKEN_SECRET)
     const userId = userToken.userId
     if (userToken.userType === 0) {
-      const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(userId) }).populate('location').populate('login')
+      const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(userId) }).populate('district').populate('login')
       if (!producer) {
         res.status(500).json({
           success: false,
           message: 'Producer not found'
         })
       }
-
       res.send(
         {
           user: producer,
