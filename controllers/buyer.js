@@ -1,5 +1,6 @@
 const { Buyer } = require('../models/buyer')
 const { User } = require('../models/user')
+const { Producer } = require('../models/producer')
 
 const getALLBuyers = async (req, res) => {
   const buyerList = await Buyer.find().populate('login')
@@ -10,6 +11,19 @@ const getALLBuyers = async (req, res) => {
     buyerList,
     success: true
   })
+}
+
+const getNoOfBuyers = async (req, res) => {
+  const dataList = await Buyer.aggregate([
+    {
+      $count: 'id'
+    }
+  ])
+
+  if (!dataList) {
+    res.status(500).json({ success: false })
+  }
+  res.send(dataList)
 }
 
 const getUserBtId = async (req, res) => {
@@ -106,5 +120,6 @@ module.exports = {
   getUserBtId,
   addUser,
   deleteUser,
-  updateProfile
+  updateProfile,
+  getNoOfBuyers
 }
