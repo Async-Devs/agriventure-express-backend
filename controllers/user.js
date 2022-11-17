@@ -130,6 +130,20 @@ const approveUser = async (req, res) => {
   })
 }
 
+const disableUser = async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.body.id,
+      { isActive: false }
+  )
+
+  if (!user) {
+    return res.status(404).send({ message: 'The user can not be updated', success: false })
+  }
+  res.send({
+    success: true,
+    user
+  })
+}
+
 const editProfile = async (req, res) => {
   const userId = req.body.id
   if (req.body.userType === 0) {
@@ -307,5 +321,6 @@ module.exports = {
   getMyProfile,
   editMyProfile,
   editProfile,
-  approveUser
+  approveUser,
+  disableUser
 }

@@ -24,6 +24,7 @@ const buyerUsersRouter = require('./routes/BuyerUsers')
 const officerUsersRouter = require('./routes/OfficerUsers')
 const guestUsersRouter = require('./routes/GuestUsers')
 const usersRouter = require('./routes/Users')
+const adminUserRouter = require('./routes/AdminUsers')
 
 const express = require('express')
 
@@ -48,6 +49,7 @@ const publicUsersToken = require('./middleware/publicUsersAuthToken')
 const producersToken = require('./middleware/producerAuthToken')
 const buyerToken = require('./middleware/buyerAuthToken')
 const officerToken = require('./middleware/officerAuthToken')
+const adminToken = require('./middleware/adminAuthToken')
 const userToken = require('./middleware/usersAuthToken')
 
 // Routes
@@ -68,6 +70,7 @@ app.use(`${api}/publicUsers`, publicUsersToken, publicUsersRouter)
 app.use(`${api}/producerUsers`, producersToken, producerUsersRouter)
 app.use(`${api}/buyerUsers`, buyerToken, buyerUsersRouter)
 app.use(`${api}/officerUsers`, officerToken, officerUsersRouter)
+app.use(`${api}/adminUser`, adminToken, adminUserRouter)
 app.use(`${api}/guestUsers`, guestUsersRouter)
 app.use(`${api}/allUsers`, userToken, usersRouter)
 

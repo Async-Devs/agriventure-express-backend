@@ -1,12 +1,14 @@
-const { Officer } = require('../models/producer')
+const { Officer } = require('../models/officer')
 const { User } = require('../models/user')
 
 const getAllOfficers = async (req, res) => {
-  const officerList = await Officer.find().populate('location').populate('login')
+  const officerList = await Officer.find().populate('district').populate('login')
   if (!officerList) {
     res.status(500).json({ success: false })
   }
-  res.send(officerList)
+  res.send({
+    success: true,
+    officerList})
 }
 
 const addNewOfficer = async (req, res) => {
@@ -20,9 +22,8 @@ const addNewOfficer = async (req, res) => {
     lastName: req.body.lastName,
     nic: req.body.nic,
     email: req.body.email,
-    telNum: req.body.telNum,
     login: req.body.login,
-    location: req.body.location,
+    district: req.body.district,
     officerType: req.body.officerType
   })
 
