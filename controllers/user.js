@@ -79,14 +79,13 @@ const getMyProfile = async (req, res) => {
     const userToken = await jwt.verify(req.header('x-auth-token'), process.env.ACCESS_TOKEN_SECRET)
     const userId = userToken.userId
     if (userToken.userType === 0) {
-      const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(userId) }).populate('location').populate('login')
+      const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(userId) }).populate('district').populate('login')
       if (!producer) {
         res.status(500).json({
           success: false,
           message: 'Producer not found'
         })
       }
-
       res.send(
         {
           user: producer,
@@ -120,6 +119,20 @@ const getMyProfile = async (req, res) => {
 const approveUser = async (req, res) => {
   const user = await User.findByIdAndUpdate(req.body.id,
     { isActive: true }
+  )
+
+  if (!user) {
+    return res.status(404).send({ message: 'The user can not be updated', success: false })
+  }
+  res.send({
+    success: true,
+    user
+  })
+}
+
+const disableUser = async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.body.id,
+      { isActive: false }
   )
 
   if (!user) {
@@ -308,5 +321,6 @@ module.exports = {
   getMyProfile,
   editMyProfile,
   editProfile,
-  approveUser
+  approveUser,
+  disableUser
 }

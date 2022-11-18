@@ -22,9 +22,9 @@ const officerSchema = mongoose.Schema({
     ref: 'User',
     required: true
   },
-  location: {
-    type: String,
-    required: true
+  district: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Districts',
   },
   officerType: {
     type: Number,

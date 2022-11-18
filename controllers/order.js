@@ -1,4 +1,6 @@
 const { Order } = require('../models/Order')
+const jwt = require("jsonwebtoken");
+const {SupportRequest} = require("../models/supportRequest");
 
 class OrderController {
   static async getAllOrders (req, res) {
@@ -30,7 +32,7 @@ class OrderController {
   static async getOrderById (req, res) {
     const orderId = req.params.id
     console.log('get order Id - ', orderId)
-    const orderDetails = await Order.find({ _id: orderId }).populate('item').populate('buyer').populate('producer')
+    const orderDetails = await Order.find({ _id: orderId }).populate('item').populate('buyer').populate('producer').populate('messages');
     console.log('get order - ', orderDetails)
     return res.send(orderDetails)
   };
@@ -56,8 +58,7 @@ class OrderController {
       }
         return  res.send(result);
 	};
-	
-	
+
 	
 }
 

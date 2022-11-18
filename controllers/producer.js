@@ -2,6 +2,7 @@ const { Producer } = require('../models/producer')
 const { Location } = require('../models/location')
 const { User } = require('../models/user')
 const { Districts } = require('../models/districts')
+const { DataEntry } = require('../models/dataEntry')
 
 const getAllProducers = async (req, res) => {
   const producerList = await Producer.find().populate('district').populate('login')
@@ -14,21 +15,32 @@ const getAllProducers = async (req, res) => {
   })
 }
 
+const getNoOfProducers = async (req, res) => {
+  const dataList = await Producer.aggregate([
+    {
+      $count: 'id'
+    }
+  ])
+
+  if (!dataList) {
+    res.status(500).json({ success: false })
+  }
+  res.send(dataList)
+}
+
 const addNewProducer = async (req, res) => {
-  console.log(req.body)
+
   const district = await Districts.findById(req.body.district)
   if (!district) {
     return res.status(400).send('Invalid district')
   }
 
-  console.log('district found')
 
   const login = await User.findById(req.body.login)
   if (!login) {
     return res.status(400).send('Invalid user')
   }
 
-  console.log('login found')
   let producer = new Producer({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -139,5 +151,6 @@ module.exports = {
   updateMyProfile,
   getUserById,
   deleteById,
-  updateProfile
+  updateProfile,
+  getNoOfProducers
 }

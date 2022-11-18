@@ -18,7 +18,9 @@ const orderSchema = mongoose.Schema({
   },
   messages: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'ChatMessage'
+    ref: 'ChatMessage',
+    required: true,
+    default: []
   }],
   order_status: {
     type: String,
