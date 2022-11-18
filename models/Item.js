@@ -36,6 +36,10 @@ const itemSchema = mongoose.Schema({
     type: Number,
     default: 0
   },
+  minimum_bid_step: {
+    type: Number,
+    default: 0
+  },
   bidding_array: {
     type: [{
       time_stamp: Date,
@@ -45,7 +49,8 @@ const itemSchema = mongoose.Schema({
         required: true
       },
       bid_amount: Number
-    }]
+    }],
+    default: []
   },
   bid_end_time: {
     type: Date,
