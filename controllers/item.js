@@ -35,15 +35,6 @@ const addItem = async (req, res) => {
     minimum_bid_step,
     bid_end_time
   } = data;
-  console.log(
-      name,
-      crop,
-      description,
-      quantity,
-      location,
-      minimum_bid,
-      minimum_bid_step,
-      bid_end_time)
   
   let isValid = true;
   
@@ -93,7 +84,6 @@ const addItem = async (req, res) => {
     }
     return res.status(201).send({ Error: false, DisplayText: "Success! New Listing Added" });
   }
-  console.log("invalid")
   return res.status(200).send({ Error: true, DisplayText: "Error: Invalid Details. Try Again !" });
 }
 
