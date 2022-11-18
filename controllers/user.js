@@ -159,6 +159,20 @@ const disableUser = async (req, res) => {
   })
 }
 
+const editProfilePicture = async (req, res) => {
+  const updateUser = await User.findByIdAndUpdate(req.body.id,{
+    profilePicture: req.body.picture
+  }, { new: true })
+
+  if (!updateUser) {
+    return res.status(404).send({ message: 'The user can not be updated', success: false })
+  }
+  res.send({
+    success: true,
+    updateUser
+  })
+}
+
 const editProfile = async (req, res) => {
   const userId = req.body.id
   if (req.body.userType === 0) {
@@ -201,7 +215,7 @@ const editMyProfile = async (req, res) => {
     const userToken = await jwt.verify(req.header('x-auth-token'), process.env.ACCESS_TOKEN_SECRET)
     const userId = userToken.userId
     if (userToken.userType === 0) {
-      const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(userId) }).populate('location').populate('login')
+      const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(userId) }).populate('login')
       if (!producer) {
         res.status(500).json({
           success: false,
@@ -216,7 +230,9 @@ const editMyProfile = async (req, res) => {
         {
           email: req.body.email,
           telNum: req.body.telNum,
-          address: req.body.address
+          address: req.body.address,
+          firstName: req.body.firstName,
+          lastName: req.body.lastName
         }, { new: true })
       if (!producerUpdate) {
         return res.status(404).send({ message: 'The producer can not be updated', success: false })
@@ -240,7 +256,9 @@ const editMyProfile = async (req, res) => {
         {
           email: req.body.email,
           telNum: req.body.telNum,
-          address: req.body.address
+          address: req.body.address,
+          firstName: req.body.firstName,
+          lastName: req.body.lastName
         }, { new: true })
       if (!buyerUpdate) {
         return res.status(404).send({ message: 'The buyer can not be updated', success: false })
@@ -337,5 +355,7 @@ module.exports = {
   editMyProfile,
   editProfile,
   approveUser,
-  disableUser
+  disableUser,
+  editProfilePicture
+
 }

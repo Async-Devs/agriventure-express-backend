@@ -8,6 +8,7 @@ router.get("/myProfile",userController.getMyProfile);
 
 router.post("/addRefundRequestMessage",refundRequestMessageController.addRefundRequestMessage);
 router.post("/addChatMessage",chatMessageController.addChatMessage);
+router.post("/changeProfilePicture",userController.editProfilePicture)
 
 router.put("/updateMyProfile",userController.editMyProfile);
 router.put("/addRefundRequestMessage",refundRequestController.updateRefundRequest);
