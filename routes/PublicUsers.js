@@ -3,8 +3,10 @@ const userController = require('../controllers/user');
 const refundRequestMessageController = require("../controllers/refundRequestMessage");
 const refundRequestController = require("../controllers/refundRequest");
 const chatMessageController = require('../controllers/chatMessage');
+const { getSocketURL } = require('../controllers/apiHandler')
 
 router.get("/myProfile",userController.getMyProfile);
+router.get("/socket-URL", getSocketURL);
 
 router.post("/addRefundRequestMessage",refundRequestMessageController.addRefundRequestMessage);
 router.post("/addChatMessage",chatMessageController.addChatMessage);
