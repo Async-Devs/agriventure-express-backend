@@ -25,6 +25,11 @@ const refundRequestSchema = mongoose.Schema({
     required: true,
     default: true
   },
+  isSendToOfficer: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
   isProducerRead: {
     type: Boolean,
     required: true,
@@ -34,6 +39,11 @@ const refundRequestSchema = mongoose.Schema({
     type: Boolean,
     required: true,
     default: true
+  },
+  isOfficerRead: {
+    type: Boolean,
+    required: true,
+    default: false
   },
   date: {
     type: Date,

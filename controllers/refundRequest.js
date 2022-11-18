@@ -2,14 +2,16 @@ const { RefundRequest } = require('../models/refundRequest')
 const { Order } = require('../models/Order')
 const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
-const { SupportRequest } = require('../models/supportRequest')
 
 const getAllRefundRequests = async (req, res) => {
-  const refundRequestList = await RefundRequest.find().populate('orderId')
-  if (refundRequestList) {
+  const refundRequestList = await RefundRequest.find({isSendToOfficer: true}).populate('orderId').populate('buyerId').populate('producerId').populate('messages')
+  if (!refundRequestList) {
     res.status(500).json({ success: false })
   }
-  res.send(refundRequestList)
+  res.send({
+    success: true,
+    refundRequestList
+  })
 }
 
 const getRefundRequestById = async (req, res) => {
@@ -191,6 +193,40 @@ const withdrawRefundRequest = async (req, res) => {
   }
 }
 
+
+const sendToOfficer = async (req, res) => {
+
+  const refundRequest = await RefundRequest.findByIdAndUpdate(req.body.id,
+      {
+        isSendToOfficer: true
+      }, { new: true })
+  if (!refundRequest) {
+    return res.status(404).send({ message: 'The refund request can not be updated', success: false })
+  }
+  res.send({
+    success: true,
+    refundRequest
+  })
+
+}
+
+const disableRequest = async (req, res) => {
+
+  const refundRequest = await RefundRequest.findByIdAndUpdate(req.body.id,
+      {
+        isActive: false,
+        isOfficerRead: true
+      }, { new: true })
+  if (!refundRequest) {
+    return res.status(404).send({ message: 'The refund request can not be updated', success: false })
+  }
+  res.send({
+    success: true,
+    refundRequest
+  })
+
+}
+
 const getMyRefundRequests = async (req, res) => {
   console.log('routing done')
   try {
@@ -249,5 +285,7 @@ module.exports = {
   updateRefundRequest,
   withdrawRefundRequest,
   getMyRefundRequests,
-  openRefundRequest
+  openRefundRequest,
+  sendToOfficer,
+  disableRequest
 }

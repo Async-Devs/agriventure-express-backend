@@ -9,4 +9,5 @@ router.get('/refundRequestForOrder/:id', refundRequestController.getRefundReques
 
 router.put('/addRefundRequestMessage', refundRequestController.updateRefundRequest)
 router.put('/withdrawRefundRequest', refundRequestController.withdrawRefundRequest)
+router.put('/sendRefundRequestToOfficer', refundRequestController.sendToOfficer)
 module.exports = router

@@ -5,6 +5,7 @@ const { Buyer } = require('../models/buyer')
 const bcrypt = require('bcrypt')
 const JWT = require('jsonwebtoken')
 const jwt = require('jsonwebtoken')
+const {Officer} = require("../models/officer");
 
 const getAllUsers = async (req, res) => {
   const userList = await User.find()
@@ -105,6 +106,20 @@ const getMyProfile = async (req, res) => {
           user: buyer,
           success: true
         }
+      )
+    }else if (userToken.userType === 2) {
+      const officer = await Officer.findOne({ login: mongoose.Types.ObjectId(userId) }).populate('login').populate('district')
+      if (!officer) {
+        res.status(500).json({
+          success: false,
+          message: 'Officer not found'
+        })
+      }
+      res.send(
+          {
+            user: officer,
+            success: true
+          }
       )
     }
   } catch (error) {

@@ -4,11 +4,24 @@ const mongoose = require('mongoose')
 const { SupportRequestMessage } = require('../models/supportRequestMessage')
 
 const getAllSupportRequests = async (req, res) => {
-  const supportRequestList = await SupportRequest.find().populate('producerId')
+  const supportRequestList = await SupportRequest.find().populate('producerId').populate('messages')
   if (supportRequestList) {
     res.status(500).json({ success: false })
   }
-  res.send(supportRequestList)
+  res.send({
+    success: true,
+    supportRequestList})
+}
+
+const getSupportRequestByType = async (req, res) => {
+  const supportRequestList = await SupportRequest.find({type: req.params.type}).populate('producerId').populate('messages')
+  if (!supportRequestList) {
+    res.status(500).json({ success: false })
+  }
+  res.send({
+    success: true,
+    supportRequestList
+  })
 }
 
 const getSupportRequestById = async (req, res) => {
@@ -89,7 +102,7 @@ const updateSupportRequest = async (req, res) => {
         messages: req.body.messages,
         lastActiveDate: Date.now(),
         isProducerRead: userType === 0,
-        isOfficerRead: userType === 3
+        isOfficerRead: userType === 2
       }, { new: true })
     if (!supportRequest) {
       return res.status(404).send({ message: 'The support request can not be updated', success: false })
@@ -104,6 +117,22 @@ const updateSupportRequest = async (req, res) => {
       msg: 'Invalid token'
     })
   }
+}
+
+const closeSupportRequest = async (req, res) => {
+
+  const supportRequest = await SupportRequest.findByIdAndUpdate(req.body.id,
+      {
+        isActive: false
+      }, { new: true })
+  if (!supportRequest) {
+    return res.status(404).send({ message: 'The support request can not be updated', success: false })
+  }
+  res.send({
+    success: true,
+    supportRequest
+  })
+
 }
 
 const getMySupportRequests = async (req, res) => {
@@ -139,5 +168,7 @@ module.exports = {
   addSupportRequest,
   getMySupportRequests,
   updateSupportRequest,
-  openSupportRequest
+  openSupportRequest,
+  getSupportRequestByType,
+  closeSupportRequest
 }
