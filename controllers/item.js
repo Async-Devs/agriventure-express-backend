@@ -6,8 +6,10 @@ const getAllItems = async (req, res) => {
 }
 
 const getAllListingByProducerId = async (req, res) => {
+  const producerId = req.params.id
   let itemListings = [];
-  console.log("Get items for producer",  )
+  console.log("Get items for producer",  producerId);
+  itemListings = await Item.find({producer:producerId});
   return res.send(itemListings)
 }
 
