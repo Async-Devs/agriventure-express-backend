@@ -1,5 +1,5 @@
-const { Officer } = require('../models/officer')
 const { User } = require('../models/user')
+const { Officer } = require('../models/officer')
 
 const getAllOfficers = async (req, res) => {
   const officerList = await Officer.find().populate('district').populate('login')
@@ -8,7 +8,21 @@ const getAllOfficers = async (req, res) => {
   }
   res.send({
     success: true,
-    officerList})
+    officerList
+  })
+}
+
+const getNoOfOfficers = async (req, res) => {
+  const dataList = await Officer.aggregate([
+    {
+      $count: 'id'
+    }
+  ])
+
+  if (!dataList) {
+    res.status(500).json({ success: false })
+  }
+  res.send(dataList)
 }
 
 const addNewOfficer = async (req, res) => {
@@ -22,6 +36,7 @@ const addNewOfficer = async (req, res) => {
     lastName: req.body.lastName,
     nic: req.body.nic,
     email: req.body.email,
+    telNum: req.body.telNum,
     login: req.body.login,
     district: req.body.district,
     officerType: req.body.officerType
@@ -60,5 +75,6 @@ const updateOfficer = async (req, res) => {
 module.exports = {
   getAllOfficers,
   addNewOfficer,
-  updateOfficer
+  updateOfficer,
+  getNoOfOfficers
 }
