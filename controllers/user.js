@@ -330,7 +330,8 @@ const signIn = async (req, res) => {
     {
       userName: user.userName,
       userType: user.userType,
-      userId: user.id
+      userId: user.id,
+      profilePicture: user.profilePicture
     },
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: '240m' }
