@@ -1,6 +1,5 @@
 const { CropType } = require('../models/cropType')
 const express = require('express')
-const { Buyer } = require('../models/buyer')
 const router = express.Router()
 
 router.get('/', async (req, res) => {
@@ -22,6 +21,21 @@ router.get('/getNoOfCrops', async (req, res) => {
     res.status(500).json({ success: false })
   }
   res.send(dataList)
+})
+
+router.get('/getCropByName/:name', async (req, res) => {
+  const crop = await CropType.aggregate([
+    {
+      $match: {
+        name: req.params.name
+      }
+    }
+  ])
+
+  if (!crop) {
+    res.status(500).json({ success: false })
+  }
+  res.send(crop)
 })
 
 router.get('/:id', async (req, res) => {
