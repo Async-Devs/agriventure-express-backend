@@ -33,7 +33,8 @@ const api = process.env.API_URL
 const app = express()
 // Socket.io
 const server = require('http').createServer(app)
-const io = require('socket.io')(server, { cors: { origin: '*' } })
+const socketHandler = require('./controllers/socketHandler');
+const io = socketHandler.socketHandler(server);
 
 app.use(cors())
 app.options('*', cors())
@@ -87,8 +88,4 @@ mongoose.connect(process.env.CONNECTION_STRING, {
 
 server.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`)
-})
-
-io.on('connect', (socket) => {
-  console.log('a user connected of ID: ', socket.id)
 })
