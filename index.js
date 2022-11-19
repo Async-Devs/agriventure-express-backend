@@ -39,7 +39,7 @@ const io = socketHandler.socketHandler(server);
 app.use(cors())
 app.options('*', cors())
 
-app.use(express.json({limit: "10mb", extended: true}))
+app.use(express.json({limit: "20mb", extended: true}))
 app.use(express.urlencoded({limit: "10mb", extended: true, parameterLimit: 50000}))
 
 
