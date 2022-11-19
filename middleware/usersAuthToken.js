@@ -3,7 +3,6 @@ require('dotenv').config()
 
 const authToken = async (req, res, next) => {
   const token = await req.header('x-auth-token')
-
   if (!token) {
     res.status(401).json({
       success: false,

@@ -38,6 +38,10 @@ const io = require('socket.io')(server, { cors: { origin: '*' } })
 app.use(cors())
 app.options('*', cors())
 
+app.use(express.json({limit: "10mb", extended: true}))
+app.use(express.urlencoded({limit: "10mb", extended: true, parameterLimit: 50000}))
+
+
 // middleware
 app.use(bodyParser.json())
 app.use(morgan('tiny'))
