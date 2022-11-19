@@ -93,3 +93,7 @@ mongoose.connect(process.env.CONNECTION_STRING, {
 server.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`)
 })
+
+setInterval(()=>{
+  console.log("tick");
+}, 1000);
