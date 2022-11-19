@@ -9,6 +9,7 @@ const officerController = require('../controllers/officer')
 router.get('/getAllDataEntry', dataEntryController.getAllDataEntry)
 router.get('/getDistrictById/:id', DistrictController.getDistrictById)
 router.get('/getAllLocations', districtController.getAllDistrict)
+router.get('/getDistrictByName/:name', districtController.getDistrictByName)
 
 router.get('/cropDetails', dataEntryController.getCropDetails)
 router.get('/districtDetails', dataEntryController.getDistrictDetails)
