@@ -16,8 +16,7 @@ const itemSchema = mongoose.Schema({
     required: true
   },
   description: {
-    type: String,
-    required: true
+    type: String
   },
   quantity: {
     type: Number,
