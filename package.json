@@ -4,7 +4,7 @@
   "description": "An application with the functionality to record the crop types being farmed, estimated amounts, and the geographical location of the crop fields. Furthermore, the system provides an informative dashboard using recorded data, and a marketplace in which suppliers can sell their harvest to buyers online. The system provides a public API for getting collected data, therefore the data can use in AI-based forecasting methods.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "nodemon index.js",
     "dev": "nodemon index.js"
   },
@@ -41,6 +41,7 @@
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.3.0",
-    "eslint-plugin-promise": "^6.0.1"
+    "eslint-plugin-promise": "^6.0.1",
+    "mocha": "^10.1.0"
   }
 }
