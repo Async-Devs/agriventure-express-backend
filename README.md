@@ -45,7 +45,7 @@ Direct into the folder which includes package.json and execute the command "npm 
 
 ## Links:
 
-* The web application can be accessed through the link here: [https://agriventure-express.onrender.com](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+* The web application can be accessed through the link here: [https://agriventure-express.onrender.com](https://agriventure-express.onrender.com)
 * Github link for the project source code (Frontend) : [https://github.com/Async-Devs/agriventure-express-web-frontend.git](https://github.com/Async-Devs/agriventure-express-web-frontend.git)
 * Github link for the project source code (Backtend) : [https://github.com/Async-Devs/agriventure-express-backend.git](https://github.com/Async-Devs/agriventure-express-backend.git)
 * Youtube link for the project demonstration : [Youtube link](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
