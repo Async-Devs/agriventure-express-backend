@@ -95,5 +95,4 @@ server.listen(PORT, () => {
 })
 
 setInterval(()=>{
-  console.log("tick");
 }, 1000);
