@@ -1,8 +1,16 @@
 const { Item } = require('../models/Item')
+const moment = require('moment-timezone')
 
 const getAllItems = async (req, res) => {
   const itemArray = await Item.find()
-  return res.send(itemArray);
+  console.log(itemArray.length);
+  const itemsThatAreNotExpired = itemArray.filter((e)=>{
+    const end = moment(e.bid_end_time).unix();
+    const currentTime = moment().unix()
+    console.log(end, currentTime, end + 120 >currentTime);
+   return end + 120 >currentTime;
+  })
+  return res.send(itemsThatAreNotExpired);
 }
 
 const getAllListingByProducerId = async (req, res) => {
