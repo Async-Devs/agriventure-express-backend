@@ -9,7 +9,6 @@ const OrderController = require('../controllers/order')
 router.get("/myProfile",userController.getMyProfile);
 router.get("/socket-URL", getSocketURL);
 router.get("/get-order/:id", OrderController.getOrderById)
-router.get("/get-order", OrderController.getAllOrders)
 
 router.post("/addRefundRequestMessage",refundRequestMessageController.addRefundRequestMessage);
 router.post("/addChatMessage",chatMessageController.addChatMessage);
