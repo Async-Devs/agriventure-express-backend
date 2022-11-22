@@ -56,6 +56,7 @@ const buyerToken = require('./middleware/buyerAuthToken')
 const officerToken = require('./middleware/officerAuthToken')
 const adminToken = require('./middleware/adminAuthToken')
 const userToken = require('./middleware/usersAuthToken')
+const { convertOrdersSchedule } = require('./controllers/scheduledTaskHandler')
 
 // Routes
 // app.use(`${api}/producers`, producerRouter)
@@ -94,5 +95,4 @@ server.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`)
 })
 
-setInterval(()=>{
-}, 1000);
+convertOrdersSchedule();
