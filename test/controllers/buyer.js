@@ -8,23 +8,23 @@ chai.use(chaiHttp);
 
 const api = "http://localhost:3001" + process.env.API_URL;
 
-describe("Producer controller",()=>{
-    describe("noOfProducers", ()=>{
-        it("Test: get producer numbers success status code",()=>{
+describe("Buyer controller",()=>{
+    describe("getNoOfBuyers", ()=>{
+        it("Test: get buyer numbers success status code",()=>{
 
             chai
                 .request(api)
-                .get("/guestUsers/noOfProducers")
+                .get("/guestUsers/noOfBuyers")
                 .then((err,response)=>{
                     response.should.have.status(200);
                 });
         });
 
-        it("Test: get producer numbers success data",()=>{
+        it("Test: get buyer numbers success data",()=>{
 
             chai
                 .request(api)
-                .get("/guestUsers/noOfProducers")
+                .get("/guestUsers/noOfBuyers")
                 .then((err,response)=>{
                     response.should.have.property("dataList");
                 });
