@@ -167,73 +167,59 @@ const setBidById = async (req, res) =>{
 
 const convertToOrder = async ()=>{
   const db = await mongoose.connection;
-  const session = await db.startSession();
+  let activeItems
   try {
-    //db Transaction start
-    session.startTransaction();
-    const activeItems = await Item.find({state:"ACTIVE"})
+    activeItems = await Item.find({state:"ACTIVE"});
     console.log("Order Scheduler \n --------------------------------------\n", activeItems.length);
-    // return;
-    activeItems.map(
-        async (e)=>{
-      if(moment(e.bid_end_time).unix()<moment().unix()){
-        console.log(e._id, e.name);
-        // await Item.findByIdAndUpdate(e._id, {state: "ENDED"},{session});
-        if(e.bidding_array.length>0){
-          const bidWinner = e.bidding_array[e.bidding_array.length-1]
-          // await Order.insertOne({
-          //   producer: e.producer,
-          //   buyer: ,
-          //   item: {
-          //     type: mongoose.Schema.Types.ObjectId,
-          //     ref: 'Item',
-          //     required: true
-          //   },
-          //   messages: [{
-          //     type: mongoose.Schema.Types.ObjectId,
-          //     ref: 'ChatMessage',
-          //     required: true,
-          //     default: []
-          //   }],
-          //   order_status: {
-          //     type: String,
-          //     required: true, // ACTIVE, COMPLETE, REMOVED
-          //     default: 'ACTIVE'
-          //   },
-          //   payment_status: {
-          //     type: String,
-          //     required: true, // PENDING, PAID
-          //     default: 'PENDING'
-          //   },
-          //   delivery_status: {
-          //     type: String,
-          //     required: true, // PROCESSING, OUT-FOR-DELIVERY, DELIVERED
-          //     default: 'PROCESSING'
-          //   },
-          //   order_price: {
-          //     type: Number,
-          //     required: true
-          //   },
-          //   order_date_time: {
-          //     type: mongoose.Schema.Types.Date,
-          //     required: true
-          //   },
-          //   order_delivery_address: String,
-          //   order_delivery_city: String,
-          //   order_delivery_zipcode: String
-          // });
-        }else{
-          console.log("No Bid");
-          // Order Is not Created Because No one Bid On the Item
-        }
-      
-      }
-    })
-  
-    await session.commitTransaction();
-  }catch (e){
-    console.log("Order Schedule Error")
+  } catch (e){
+    console.log("Error fetch");
+    return;
   }
+  // return;
+  activeItems.map( async (e)=>{
+      const session = await db.startSession();
+      try {
+        await session.startTransaction();
+        
+        //If Expired at time
+        if(moment(e.bid_end_time).unix()<moment().unix()){
+          await Item.findByIdAndUpdate(e._id, {state: "ENDED"},{session});
+          
+          // If The Item Bidding Array is not Empty
+          if(e.bidding_array.length>0){
+            const bidWinner = e.bidding_array[e.bidding_array.length-1];
+            
+            const data = {
+              producer: e.producer,
+              buyer: bidWinner.bidder,
+              item: e._id,
+              order_price: bidWinner.bid_amount,
+              order_date_time: moment(),
+              order_delivery_address: "",
+              order_delivery_city: "",
+              order_delivery_zipcode: ""
+            }
+            
+            // Create new Order Document
+            let itemListing = new Order(data)
+            try {
+              await  itemListing.save({session});
+            }catch (e){
+              console.log(e);
+              console.log("Order Schedule Error")
+              await session.abortTransaction();
+            }
+          }
+        }
+        await session.commitTransaction();
+        
+      }catch (e){
+        console.log(e);
+        console.log("Order Schedule Error")
+        await session.abortTransaction();
+      }
+      await  session.endSession();
+  });
 }
 
 module.exports = {
