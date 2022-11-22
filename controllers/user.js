@@ -6,6 +6,9 @@ const bcrypt = require('bcrypt')
 const JWT = require('jsonwebtoken')
 const jwt = require('jsonwebtoken')
 const {Officer} = require("../models/officer");
+const {EmailUtil} = require("../util/emailModule");
+const transporter = require("../util/emailModule");
+
 
 const getAllUsers = async (req, res) => {
   const userList = await User.find()
@@ -312,9 +315,16 @@ const addUser = async (req, res) => {
 const signIn = async (req, res) => {
   const user = await User.findOne({ userName: req.body.userName })
   if (!user) {
-    return res.status(400).json({
+    return res.json({
       success: false,
       msg: 'Invalid Username or password'
+    })
+  }
+
+  if (!user.isActive) {
+    return res.json({
+      success: false,
+      msg: 'User account is not active'
     })
   }
 
@@ -345,6 +355,88 @@ const signIn = async (req, res) => {
   })
 }
 
+const forgetPassword = async (req, res) => {
+  const user = await User.findOne({ userName: req.body.userName })
+  if (!user) {
+    return res.json({
+      success: false,
+      msg: 'User not found'
+    })
+  }
+
+  if (!user.isActive) {
+    return res.json({
+      success: false,
+      msg: 'User account is not active'
+    })
+  }
+
+
+  if (user.userType === 0) {
+    const producer = await Producer.findOne({ login: mongoose.Types.ObjectId(user._id) })
+    if (!producer) {
+      res.status(500).json({
+        success: false,
+        message: 'Producer not found'
+      })
+    }
+
+    EmailUtil.sendEmail(producer.email,"AgriventureExpress: Conformation Pin","Your conformation pin is xxxx");
+    return res.json({
+      success: true,
+      msg: 'Email sent'
+    });
+
+
+  } else if (user.userType === 1) {
+    const buyer = await Buyer.findOne({ login: mongoose.Types.ObjectId(user._id)})
+    if (!buyer) {
+      res.status(500).json({
+        success: false,
+        message: 'Buyer not found'
+      })
+    }
+
+    const mailOptions = {
+      from: process.env.TRANSPORTER_USERNAME,
+      to: "supundhananjaya.518@gmail.com",
+      subject:
+          "Request Rejection For Person Verification Digital Platform",
+      text: "Your registration request has been rejected",
+    }
+
+    console.log(mailOptions);
+    await transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+        throw err;
+      } else {
+        console.log("Email sent: " + info.response);
+        return resolve("Email Sent");
+      }
+    });
+    res.send({ user: user, success: true });
+
+  }else if (user.userType === 2) {
+    const officer = await Officer.findOne({ login: mongoose.Types.ObjectId(user._id) })
+    if (!officer) {
+      res.status(500).json({
+        success: false,
+        message: 'Officer not found'
+      })
+    }
+    EmailUtil.sendEmail(officer.email,"AgriventureExpress: Conformation Pin","Your conformation pin is xxxx");
+    return res.json({
+      success: true,
+      msg: 'Email sent'
+    });
+
+  }
+
+}
+
+
+
 module.exports = {
   getAllUsers,
   isExist,
@@ -357,6 +449,7 @@ module.exports = {
   editProfile,
   approveUser,
   disableUser,
-  editProfilePicture
+  editProfilePicture,
+  forgetPassword
 
 }
