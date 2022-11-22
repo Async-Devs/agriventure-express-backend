@@ -270,6 +270,30 @@ const editMyProfile = async (req, res) => {
         success: true,
         producer: buyer
       })
+    }else if(userToken.userType === 2){
+      const officer = await Officer.findOne({ login: mongoose.Types.ObjectId(userId) }).populate('login')
+      if (!officer) {
+        res.status(500).json({
+          success: false,
+          message: 'Officer not found'
+        })
+      }
+      officerId = officer._id
+
+      const officerUpdate = await Officer.findByIdAndUpdate(
+          officerId,
+          {
+            email: req.body.email,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName
+          }, { new: true })
+      if (!officerUpdate) {
+        return res.status(404).send({ message: 'The officer can not be updated', success: false })
+      }
+      res.send({
+        success: true,
+        officer: officer
+      })
     }
   } catch (error) {
     console.log(error)
@@ -353,6 +377,47 @@ const signIn = async (req, res) => {
     userId: user.id,
     userType: user.userType
   })
+}
+
+const updatePassword = async (req, res) => {
+  const user = await User.findById(req.body.id);
+  console.log(user)
+  if(!user){
+    return res.json({
+      success: false,
+      msg: 'User Not Found'
+    })
+  }
+
+  if (!user.isActive) {
+    return res.json({
+      success: false,
+      msg: 'User account is not active'
+    })
+  }
+
+  const isMatch = await bcrypt.compare(req.body.password, user.password)
+  if (!isMatch) {
+    return res.status(401).json({
+      success: false,
+      msg: 'Invalid password'
+    })
+  }
+
+  const salt = await bcrypt.genSalt(10)
+  const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
+
+  const user1 = await User.findByIdAndUpdate(req.body.id,
+      { password: hashedPassword }
+  )
+
+  if (!user1) {
+    return res.status(404).send({ message: 'The user can not be updated', success: false })
+  }
+  res.send({
+    success: true,
+    user1
+  });
 }
 
 const forgetPassword = async (req, res) => {
@@ -450,6 +515,7 @@ module.exports = {
   approveUser,
   disableUser,
   editProfilePicture,
-  forgetPassword
+  forgetPassword,
+  updatePassword
 
 }

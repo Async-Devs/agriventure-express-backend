@@ -17,6 +17,7 @@ router.get('/getAllDistricts', DistrictController.getAllDistricts)
 
 router.put('/updateDataEntry', dataEntryController.updateDataEntry)
 router.put('/updateProfile', userController.editProfile)
+router.put('/updateMyProfile', userController.editMyProfile)
 router.put('/updateProfilePicture', userController.editProfilePicture)
 router.put('/approveUser', userController.approveUser)
 router.put('/addSupportRequestMessage',supportRequestController.updateSupportRequest)
