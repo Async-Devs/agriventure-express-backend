@@ -1,9 +1,10 @@
 const cron = require('node-cron')
 const { convertToOrder } = require('./item')
+const moment = require('moment-timezone')
 
 const convertOrdersSchedule = ()=>{
-	cron.schedule('10,20,30,40,50 * * * * *', () => {
-		console.log('running a task every minute');
+	cron.schedule('* * * * *', () => {
+		console.log('running Order Schedule: ', moment().format());
 		convertToOrder();
 	});
 }
