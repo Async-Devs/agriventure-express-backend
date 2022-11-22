@@ -2,6 +2,7 @@ const { Districts } = require('../models/districts')
 
 class DistrictController {
   static async getAllDistricts (req, res) {
+    console.log(123);
     const districtArray = await Districts.find()
     return res.send(districtArray)
   };
