@@ -19,10 +19,17 @@ In this project user can view agriculture data of the country, add agriculture d
 ## Directories:
 
 This repository contains the following.
-* controllers - 
-* models - 
-* routes - 
-* middleware - 
+* controllers - Database access and methods of each database schema
+* models - Database schemas
+* routes - routers for each user types
+* middleware - middleware folder include following files
+  * authToken.js - Generate JWT tokens
+  * producerAuthToken - check the validity of the JWT tokens and check the user type of the token is equal to 0
+  * buyerAuthToken - check the validity of the JWT tokens and check the user type of the token is equal to 1
+  * officerAuthToken - check the validity of the JWT tokens and check the user type of the token is equal to 2
+  * adminAuthToken - check the validity of the JWT tokens and check the user type of the token is equal to 0
+  * usersAuthToken - check the validity of the JWT tokens
+  * publicUsersAuthToken - check the validity of the JWT tokens and check the user type of the token is equal to 0 or 1
 
 ## Prerequisites:
 
