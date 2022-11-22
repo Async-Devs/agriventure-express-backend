@@ -1,7 +1,11 @@
-const getSupportType = (type) => {
-    const supportTypes = []
+class SupportTypes {
+    static getSupportType = (type) => {
+        const supportTypes = ["Agricultural Support","Technical Support","Report an Issue","Marketplace Support"]
+        return supportTypes[type]
+    }
 }
 
-module.exports = {
-    getSupportType
-}
+
+
+
+module.exports.SupportTypes = SupportTypes
