@@ -58,7 +58,7 @@ const setOrderPayment = async (req, res)=>{
         order_delivery_address: updateData.orderUpdate.order_delivery_address,
         order_delivery_city: updateData.orderUpdate.order_delivery_city,
         order_delivery_zipcode: updateData.orderUpdate.order_delivery_zipcode,
-        order_status:"PAID"
+        payment_status:"PAID"
       },{session});
     await session.commitTransaction();
     
