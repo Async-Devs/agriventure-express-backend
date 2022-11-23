@@ -14,5 +14,6 @@ router.put('/addRefundRequestMessage', refundRequestController.updateRefundReque
 router.put('/withdrawRefundRequest', refundRequestController.withdrawRefundRequest)
 router.put('/sendRefundRequestToOfficer', refundRequestController.sendToOfficer)
 router.put('/items/set-bid/:id', ItemController.setBidById)
+router.put('/update/payment', OrderController.setOrderPayment)
 
 module.exports = router
