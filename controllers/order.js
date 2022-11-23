@@ -1,4 +1,5 @@
 const { Order } = require('../models/Order')
+const mongoose = require('mongoose')
 
 const getOrdersByBuyerId = async(req, res) => {
     const buyerId = req.params.id
@@ -38,10 +39,43 @@ const updateOrderDeliveryStatus = async(req, res) => {
       }
         return  res.send(result);
 	};
- 
+
+const setOrderPayment = async (req, res)=>{
+  console.log( req.body.data);
+  const updateData = req.body.data
+  const db = await mongoose.connection;
+  const session = await db.startSession();
+  try {
+    await session.startTransaction();
+    const isValidPayment = true; // Payment gateway here
+    if(!isValidPayment){
+      await session.abortTransaction();
+      return res.status(200).send({error: true, text: "Payment not Valid"});
+    }
+    
+    await Order.findByIdAndUpdate(updateData.orderId,
+      {
+        order_delivery_address: updateData.orderUpdate.order_delivery_address,
+        order_delivery_city: updateData.orderUpdate.order_delivery_city,
+        order_delivery_zipcode: updateData.orderUpdate.order_delivery_zipcode,
+        order_status:"PAID"
+      },{session});
+    await session.commitTransaction();
+    
+  }catch (e){
+    console.log(e);
+    console.log("Order Payment Error")
+    await session.abortTransaction();
+    return res.status(200).send({error: true, text: "Error occurred"});
+  }
+  
+  return res.status(200).send({error: false, text: "Success"});
+}
+
 module.exports = {
   getOrdersByBuyerId,
   getOrdersByProducerId,
   getOrderById,
-  updateOrderDeliveryStatus
+  updateOrderDeliveryStatus,
+  setOrderPayment
 }
